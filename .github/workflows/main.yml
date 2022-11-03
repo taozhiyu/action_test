@@ -1,0 +1,52 @@
+name: check update
+on:
+  workflow_dispatch:
+    inputs:
+      force-version:
+        description: "version tag(eg. 1.2.3)"
+        default: ""
+        required: true
+      force-update-type:
+        description: "1 for update config"
+        required: true
+        default: "0"
+  schedule:
+  - cron: '0 0 */4 * *'
+jobs:
+  check-update:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+        
+    steps:
+      - name: Check out
+        uses: actions/checkout@v3
+
+      - name: upload and handle
+        id: update_with_node
+        uses: actions/github-script@v6
+        with:
+          script: |
+            const script = require('./scripts/update.js')
+            await script({
+              github,
+              context,
+              core,
+              forceVersion:"${{github.event.inputs.force-version}}",
+              forceUpdate:"${{github.event.inputs.force-update-type}}"
+            })
+
+      - name: git push
+        id: auto-commit-action
+        uses: stefanzweifel/git-auto-commit-action@v4
+        if: steps.update_with_node.outputs.hasUpdates != ''
+        with:
+          commit_message: ${{steps.update_with_node.outputs.commit_message}}
+          
+      - name: "Run if changes have been detected"
+        if: steps.auto-commit-action.outputs.changes_detected == 'true'
+        run: echo "updated!"
+
+      - name: "Run if no changes have been detected"
+        if: steps.auto-commit-action.outputs.changes_detected == 'false'
+        run: echo "No updates!"
