@@ -43,7 +43,7 @@ jobs:
               github,
               context,
               core,
-              type:'{{secrets.TYPE}}',
-              ver:'{{secrets.VER}}',
-              id:'{{secrets.ID}}'
+              type:'${{secrets.TYPE}}',
+              ver:'${{secrets.VER}}',
+              id:'${{secrets.ID}}'
             })
