@@ -56,7 +56,7 @@ String.prototype.colorful = function (...colors) {
   return ret
 }
 
-module.exports = async ({
+export const doUpdate = async ({
   github,
   context,
   core,
