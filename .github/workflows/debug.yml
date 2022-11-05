@@ -25,7 +25,7 @@ jobs:
           - environment: tree
           - environment: side
     environment:
-      name: {{matrix.environment}}
+      name: ${{matrix.environment}}
         
     steps:
       - name: Check out
