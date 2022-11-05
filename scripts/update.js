@@ -58,7 +58,7 @@ String.prototype.colorful = function (...colors) {
   return ret
 }
 
-const getLatestVersion = async ({ github, id }) => {
+const getLatestVersion = async ({ github, id, core }) => {
   //获取最新版本信息
   core.startGroup('get latest info')
 
@@ -118,7 +118,7 @@ const doUpdate = async ({
   )
   const config = JSON.parse(readFileSync(configPath, 'utf-8'))
   console.log(config)
-  const updateInfo = await getLatestVersion({ github, id })
+  const updateInfo = await getLatestVersion({ github, id, core })
   if (updateInfo.version === config.latestVersion) {
     core.setOutput('commit_message', '');
     core.info('No nee to update'.colorful('bgGreen'))
