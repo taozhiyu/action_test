@@ -68,9 +68,9 @@ export default async function doUpdate({
   const forceUpdate = core.getInput('force-update-type') === "yes",
     forceVersion = core.getInput('force-version')
   core.startGroup('base info'.colorful('green'))
-  core.info('type:', [...type].join('||').colorful('red'))
-  core.info('id', [...id].join('||').colorful('red'))
-  core.info('version', [...oldVer].join('||').colorful('red'))
+  core.info('type:', type.colorful('red'))
+  core.info('id', id.colorful('red'))
+  core.info('version', oldVer.colorful('red'))
   core.endGroup()
   //获取最新版本信息
 
@@ -103,13 +103,13 @@ export default async function doUpdate({
     return
   }
   console.log(`Latest Version: 
-${'version'.colorful('whiteBright', 'bgYellow')}: ${[...updateInfo.version].join('||').colorful(
+${'version'.colorful('whiteBright', 'bgYellow')}: ${updateInfo.version.colorful(
     'yellow',
   )}
 ${'codebase'.colorful(
     'whiteBright',
     'bgGreen',
-  )}: ${[...updateInfo.codebase].join('||').colorful('green')}`)
+  )}: ${updateInfo.codebase.colorful('green')}`)
   core.endGroup()
   return
   // 获取最新tag
