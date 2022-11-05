@@ -1,5 +1,5 @@
-// import { readFileSync } from 'fs'
-// import path from 'path'
+import { readFileSync } from 'fs'
+import path from 'path'
 import { xml2js } from 'xml-js'
 // import { Octokit } from '@octokit/rest'
 // const release = async () => {
@@ -57,22 +57,9 @@ String.prototype.colorful = function (...colors) {
   return ret
 }
 
-export default async function doUpdate({
-  github,
-  context,
-  core,
-  type,
-  id,
-  ver: oldVer,
-}) {
-  const forceUpdate = core.getInput('force-update-type') === "yes",
-    forceVersion = core.getInput('force-version')
-  core.startGroup('base info'.colorful('green'))
-  core.info('type:', type.colorful('red'))
-  core.info('id', id.colorful('red'))
-  core.info('version', oldVer.colorful('red'))
-  core.endGroup()
+const getLatestVersion = async ({ github, id }) => {
   //获取最新版本信息
+  core.startGroup('get latest info')
 
   const url = `https://clients2.google.com/service/update2/crx?response=xml&os=win&arch=x64&os_arch=x86_64&nacl_arch=x86-64&prod=chromecrx&prodchannel=&prodversion=107.0.5304.88&lang=zh-CN&acceptformat=crx3&x=id%3D${id}%26installsource%3Dondemand%26uc`
 
@@ -111,14 +98,32 @@ ${'codebase'.colorful(
     'bgGreen',
   )}: ${updateInfo.codebase.colorful('green')}`)
   core.endGroup()
-  return
-  // 获取最新tag
-  const tagInfo = await github.rest.repos.listTags(
-    ({ owner, repo } = context.repo),
-  )
-  console.log(tagInfo)
-  //console.log(assetInfo2);
+  return updateInfo
+}
 
+export default doUpdate = async ({
+  github,
+  context,
+  core,
+  type,
+  id,
+}) => {
+  const forceUpdate = core.getInput('force-update-type') === "yes",
+    forceVersion = core.getInput('force-version')
+
+  // 获取最新version
+  const configPath = path.join(
+    path.dirname(fileURLToPath(import.meta.url)),
+    '../docs/update' + type + '/config.json',
+  )
+  const config = JSON.parse(readFileSync(configPath, 'utf-8'))
+  console.log(config)
+  const updateInfo = await getLatestVersion({ github, id })
+  if (updateInfo.version === config.latestVersion) {
+    core.setOutput('commit_message', '');
+    core.info('No nee to update'.colorful('bgGreen'))
+    return
+  }
   //更新json配置
   //   if (!(forceVersion && forceUpdate !== '1')) {
   //     const conf = JSON.parse(fs.readFileSync(win64ConfigPath))

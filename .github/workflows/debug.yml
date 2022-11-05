@@ -44,6 +44,20 @@ jobs:
               context,
               core,
               type:'${{secrets.TYPE}}',
-              ver:'${{secrets.VER}}',
               id:'${{secrets.ID}}'
             })
+
+      - name: git push
+        id: auto-commit-action
+        uses: stefanzweifel/git-auto-commit-action@v4
+        if: steps.update_with_node.outputs.commit_message != ''
+        with:
+          commit_message: ${{steps.update_with_node.outputs.commit_message}}
+          
+      - name: "Run if changes have been detected"
+        if: steps.auto-commit-action.outputs.changes_detected == 'true'
+        run: echo "updated!"
+
+      - name: "Run if no changes have been detected"
+        if: steps.auto-commit-action.outputs.changes_detected == 'false'
+        run: echo "No updates!"
