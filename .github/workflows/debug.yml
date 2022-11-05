@@ -4,12 +4,12 @@ on:
     inputs:
       force-version:
         description: "version tag(eg. 1.2.3)"
-        default: ""
+        default: "1.0.0"
         required: true
       force-update-type:
         description: "Is force update"
         required: true
-        default: false
+        default: 'no'
         type: choice
         options: 
         - 'yes'
@@ -18,13 +18,13 @@ on:
 jobs:
   check-tree:
     runs-on: ubuntu-latest
-    environment: '{{matrix.environment}}'
     strategy:
       fail-fast: false
       matrix:
         include:
           - environment: tree
           - environment: side
+    environment: '{{matrix.environment}}'
         
     steps:
       - name: Check out
