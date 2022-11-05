@@ -1,5 +1,6 @@
 import { readFileSync } from 'fs'
 import path from 'path'
+import { fileURLToPath } from 'url'
 import { xml2js } from 'xml-js'
 // import { Octokit } from '@octokit/rest'
 // const release = async () => {
