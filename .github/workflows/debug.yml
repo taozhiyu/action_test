@@ -29,13 +29,6 @@ jobs:
     steps:
       - name: Check out
         uses: actions/checkout@v3
-
-      - uses: shaowenchen/debugger-action@v2
-        name: debugger
-        timeout-minutes: 30
-        continue-on-error: true
-        with:
-          ngrok_token: ${{ secrets.NGROK_TOKEN }}
       
       - name: upload and handle
         id: update_with_node
