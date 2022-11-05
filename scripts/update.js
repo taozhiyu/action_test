@@ -56,14 +56,14 @@ String.prototype.colorful = function (...colors) {
   return ret
 }
 
-export const doUpdate = async ({
+export default async function doUpdate({
   github,
   context,
   core,
   type,
   id,
   ver: oldVer,
-}) => {
+}) {
   const forceUpdate = core.getInput('force-update-type') === "yes",
     forceVersion = core.getInput('force-version')
   core.startGroup('base info'.colorful('green'))
