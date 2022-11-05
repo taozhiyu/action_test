@@ -45,7 +45,7 @@ module.exports = async ({
   id,
   ver: oldVer,
 }) => {
-  const forceUpdate = core.getBooleanInput('force-update-type'),
+  const forceUpdate = core.getInput('force-update-type') === "yes",
     forceVersion = core.getInput('force-version')
   core.startGroup('base info'.colorful('green'))
   core.info('type:', type.colorful('red'))
