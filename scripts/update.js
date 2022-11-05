@@ -100,7 +100,7 @@ ${'codebase'.colorful(
   core.endGroup()
   return updateInfo
 }
-const  = async ({
+const doUpdate = async ({
   github,
   context,
   core,
