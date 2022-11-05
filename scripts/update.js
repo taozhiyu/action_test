@@ -100,8 +100,7 @@ ${'codebase'.colorful(
   core.endGroup()
   return updateInfo
 }
-
-export default doUpdate = async ({
+const  = async ({
   github,
   context,
   core,
@@ -143,3 +142,5 @@ export default doUpdate = async ({
 
   //   core.setOutput('commit_message', `update ${checkType} V${update_version}`)
 }
+
+export default doUpdate
