@@ -1,4 +1,4 @@
-name: example-ngrok-kind-v2
+name: debug
 on:
   workflow_dispatch:
     inputs:
@@ -16,7 +16,7 @@ on:
         - 'no'
 
 jobs:
-  check-tree:
+  check-update:
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
