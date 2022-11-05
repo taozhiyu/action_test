@@ -114,7 +114,7 @@ const doUpdate = async ({
   // 获取最新version
   const configPath = path.join(
     path.dirname(fileURLToPath(import.meta.url)),
-    '../docs/update' + type + '/config.json',
+    '../docs/update/' + type + '/config.json',
   )
   const config = JSON.parse(readFileSync(configPath, 'utf-8'))
   console.log(config)
