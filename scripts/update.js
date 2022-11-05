@@ -37,7 +37,7 @@ String.prototype.colorful = function (...e) {
 };
 
 
-export const doUpdate = async ({
+export default async ({
   github,
   context,
   core,
