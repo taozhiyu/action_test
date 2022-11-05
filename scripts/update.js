@@ -32,6 +32,7 @@ import { xml2js } from 'xml-js'
 //   })
 // }
 import { colorNames, modifierNames } from 'ansi-styles'
+import styles from 'ansi-styles'
 
 String.prototype.colorful = function (...colors) {
   const text = this,
