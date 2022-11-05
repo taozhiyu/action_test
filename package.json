@@ -1,0 +1,25 @@
+{
+    "name": "action_test",
+    "version": "1.0.0",
+    "description": "",
+    "repository": {
+      "type": "git",
+      "url": "git+https://github.com/taozhiyu/action_test.git"
+    },
+    "author": "涛之雨",
+    "license": "GPL-3.0-or-later",
+    "bugs": {
+      "url": "https://github.com/taozhiyu/action_test/issues"
+    },
+    "homepage": "https://github.com/taozhiyu/action_test#readme",
+    "type": "module",
+    "dependencies": {
+      "ansi-styles": "^6.2.1",
+      "libsodium-wrappers": "^0.7.10",
+      "xml-js": "^1.6.11"
+    },
+    "devDependencies": {
+      "@types/libsodium-wrappers": "^0.7.10"
+    }
+  }
+  
