@@ -30,18 +30,20 @@ jobs:
     steps:
       - name: Check out
         uses: actions/checkout@v3
-      
+      - name: setup node
+        uses: actions/setup-node@v2
+      - run: npm ci
       - name: upload and handle
         id: update_with_node
         uses: actions/github-script@v6
         with:
           script: |
-            const script = import('./scripts/update.js')
+            const { default: script } = await import('${{ github.workspace }}/scripts/update.js')
             await script({
               github,
               context,
               core,
-              type:'{{secrets.TYPE}}',
-              ver:'{{secrets.VER}}',
-              id:'{{secrets.ID}}'
+              type:'${{secrets.TYPE}}',
+              ver:'${{secrets.VER}}',
+              id:'${{secrets.ID}}'
             })
