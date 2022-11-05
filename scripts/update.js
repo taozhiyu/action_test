@@ -1,8 +1,7 @@
 import { readFileSync } from 'fs'
 import path from 'path'
-import fetch from 'node-fetch'
-import { xml2js } from 'xml-js'
-import { Octokit } from '@octokit/rest'
+// import { xml2js } from 'xml-js'
+// import { Octokit } from '@octokit/rest'
 const release = async () => {
   //发布新release
   const releaseInfo = await github.rest.repos.createRelease({
@@ -38,16 +37,16 @@ String.prototype.colorful = function (...e) {
 };
 
 
-const doUpdate = async (
-  {
-    github,
-    context,
-    core,
-    type,
-    id,
-    ver: oldVer,
-  },
-) => {
+export const doUpdate = async ({
+  github,
+  context,
+  core,
+  type,
+  id,
+  ver: oldVer,
+}) => {
+  const forceUpdate = core.getBooleanInput('force-update-type'),
+    forceVersion = core.getInput('force-version')
   core.startGroup('base info'.colorful('green'))
   core.info('type:', type.colorful('red'))
   core.info('id', id.colorful('red'))
@@ -92,7 +91,7 @@ ${'codebase'.colorful(
     'bgGreen',
   )}: ${updateInfo.codebase.colorful('green')}`)
   core.endGroup()
-return
+  return
   // 获取最新tag
   const tagInfo = await github.rest.repos.listTags(
     ({ owner, repo } = context.repo),
@@ -119,4 +118,3 @@ return
 
   //   core.setOutput('commit_message', `update ${checkType} V${update_version}`)
 }
-doUpdate({})
