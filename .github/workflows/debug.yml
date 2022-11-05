@@ -1,0 +1,53 @@
+name: example-ngrok-kind-v2
+on:
+  workflow_dispatch:
+    inputs:
+      force-version:
+        description: "version tag(eg. 1.2.3)"
+        default: ""
+        required: true
+      force-update-type:
+        description: "Is force update"
+        required: true
+        default: false
+        type: choice
+        options: 
+        - 'yes'
+        - 'no'
+
+jobs:
+  check-tree:
+    runs-on: ubuntu-latest
+    environment: '{{matrix.environment}}'
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - environment: tree
+          - environment: side
+        
+    steps:
+      - name: Check out
+        uses: actions/checkout@v3
+
+      - uses: shaowenchen/debugger-action@v2
+        name: debugger
+        timeout-minutes: 30
+        continue-on-error: true
+        with:
+          ngrok_token: ${{ secrets.NGROK_TOKEN }}
+      
+      - name: upload and handle
+        id: update_with_node
+        uses: actions/github-script@v6
+        with:
+          script: |
+            const script = require('./scripts/update.js')
+            await script({
+              github,
+              context,
+              core,
+              type:'{{secrets.TYPE}}',
+              ver:'{{secrets.VER}}',
+              id:'{{secrets.ID}}'
+            })
