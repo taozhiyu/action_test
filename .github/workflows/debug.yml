@@ -35,7 +35,7 @@ jobs:
         uses: actions/github-script@v6
         with:
           script: |
-            const script = require('./scripts/update.js')
+            const script = import('./scripts/update.js')
             await script({
               github,
               context,
