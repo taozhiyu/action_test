@@ -37,7 +37,7 @@ String.prototype.colorful = function (...e) {
 };
 
 
-export default async ({
+module.exports = async ({
   github,
   context,
   core,
