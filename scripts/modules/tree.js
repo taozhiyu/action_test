@@ -6,9 +6,8 @@ import { fileURLToPath } from 'url'
 import generator from '@babel/generator'
 import path from 'path'
 
-const handleMain = (url) => {
+const handleMain = ({ url, io }) => {
     const fileName = path.basename(url, '.crx')
-
     const jspath = path.join(
         path.dirname(fileURLToPath(import.meta.url)),
         '../../temp/' + fileName + '/content.js',
@@ -58,6 +57,10 @@ const handleMain = (url) => {
         rawCode,
     )
     console.log(output.code)
+    await io.mkdirP(path.join(
+        path.dirname(fileURLToPath(import.meta.url)),
+        '../../docs/updates/tree/' + fileName
+    ));
     fs.writeFile(
         path.join(
             path.dirname(fileURLToPath(import.meta.url)),

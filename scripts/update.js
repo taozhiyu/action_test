@@ -153,6 +153,7 @@ const doUpdate = async ({
   type,
   id,
   exec,
+  io
 }) => {
   const forceUpdate = core.getInput('force-update-type') === "yes",
     forceVersion = core.getInput('force-version')
@@ -173,7 +174,7 @@ const doUpdate = async ({
 
   const { default: handleMain } = await import('./modules/' + type + '.js')
   try {
-    const result = handleMain(updateInfo.codebase)
+    const result = handleMain({ url: updateInfo.codebase, io })
     core.info('handle result:', result)
     if (!result) {
       throw 'handle error'
