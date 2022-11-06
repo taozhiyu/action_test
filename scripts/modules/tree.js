@@ -7,7 +7,11 @@ import path from 'path'
 
 const handleMain = (url) => {
     const fileName = path.basename(url, '.crx')
-    const jspath = "../temp/" + fileName + "/content.js"
+
+    const jspath = path.join(
+        path.dirname(fileURLToPath(import.meta.url)),
+        '../temp/' + fileName + '/content.js',
+    )
     const rawCode = fs.readFileSync(jspath, 'utf-8')
     const ast = parser.parse(rawCode)
     traverse.default(ast, {
@@ -54,7 +58,10 @@ const handleMain = (url) => {
     )
     console.log(output.code)
     fs.writeFile(
-        '../docs/updates/tree/' + fileName + '/content.js',
+        path.join(
+            path.dirname(fileURLToPath(import.meta.url)),
+            '../docs/updates/tree/' + fileName + '/content.js',
+        ),
         output.code,
         (err) => {
             console.log(err)
