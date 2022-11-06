@@ -2,6 +2,7 @@ import fs from 'fs'
 import parser from '@babel/parser'
 import traverse from '@babel/traverse'
 import types from '@babel/types'
+import { fileURLToPath } from 'url'
 import generator from '@babel/generator'
 import path from 'path'
 
