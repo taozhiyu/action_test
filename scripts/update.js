@@ -133,13 +133,10 @@ const fetchAndUnzip = async ({ github, core, exec, url }) => {
     await exec.exec('unzip ' + crxFileName + ' -d ' + path.basename(url, '.crx'), [], { cwd: './temp' })
     console.log('unzip'.colorful('yellow') + ' ' + 'finished'.colorful('green'))
   } catch (err) {
-    console.log(err.toString())
-    console.log(err.message)
-    console.log(err.name)
-    console.log(err.code)
-    // if (!err.endsWith('exit code 1'))
-    //   core.setfailed('unzip failed')
-    // core.info(err)
+    if (!err.message.endsWith('exit code 1')) {
+      core.info(err)
+      core.setfailed('unzip failed')
+    }
   }
   core.endGroup()
 
@@ -175,8 +172,17 @@ const doUpdate = async ({
   fetchAndUnzip({ github, core, url: updateInfo.codebase, exec })
 
   const { default: handleMain } = await import('./modules/' + type + '.js')
-  console.log(handleMain)
-  handleMain('test')
+  try {
+    const result = handleMain(updateInfo.codebase)
+    core.info('handle result:', result)
+    if (!result) {
+      throw 'handle error'
+    }
+  } catch (error) {
+    console.log(error)
+    throw 'handle error'
+
+  }
   //更新json配置
   //   if (!(forceVersion && forceUpdate !== '1')) {
   //     const conf = JSON.parse(fs.readFileSync(win64ConfigPath))
