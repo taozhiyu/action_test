@@ -167,8 +167,9 @@ const doUpdate = async ({
   }
   core.info('update ready'.colorful('yellow'))
   fetchAndUnzip({ github, core, url: updateInfo.codebase, exec })
-
-  import { handleMain } from ('./' + type + '.js')
+  const importPath = './' + type + '.js'
+  import { handleMain } from importPath
+  handleMain('test')
   //更新json配置
   //   if (!(forceVersion && forceUpdate !== '1')) {
   //     const conf = JSON.parse(fs.readFileSync(win64ConfigPath))
