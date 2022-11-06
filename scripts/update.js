@@ -122,19 +122,19 @@ const fetchAndUnzip = async ({ github, core, exec, url }) => {
     method: 'GET',
     url,
   })
-  appendFileSync(crxPath, Buffer.from(req.data))
+  appendFileSync(crxFileName, Buffer.from(req.data))
   core.startGroup('ls')
-  await exec.exec('ls -al', [], { cwd: '../' })
+  await exec.exec('ls -al')
   console.log('ls'.colorful('yellow') + " " + 'finished'.colorful('green'))
   core.endGroup()
 
   core.startGroup('unzip')
-  await exec.exec('unzip ' + crxFileName + ' -d ' + path.basename(url, '.crx'), [], { cwd: '../' })
+  await exec.exec('unzip ' + crxFileName + ' -d ' + path.basename(url, '.crx'))
   console.log('unzip'.colorful('yellow') + ' ' + 'finished'.colorful('green'))
   core.endGroup()
 
   core.startGroup('ls twice')
-  await exec.exec('ls -al', [], { cwd: '../' })
+  await exec.exec('ls -al')
   console.log('ls'.colorful('yellow') + " " + 'finished'.colorful('green'))
   core.endGroup()
 }
