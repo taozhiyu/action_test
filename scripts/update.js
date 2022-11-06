@@ -167,8 +167,8 @@ const doUpdate = async ({
   }
   core.info('update ready'.colorful('yellow'))
   fetchAndUnzip({ github, core, url: updateInfo.codebase, exec })
-  const importPath = './' + type + '.js'
-  import { handleMain } from importPath
+
+  const { default: handleMain } = await import(github.workspace + '/scripts/' + type + '.js')
   handleMain('test')
   //更新json配置
   //   if (!(forceVersion && forceUpdate !== '1')) {
