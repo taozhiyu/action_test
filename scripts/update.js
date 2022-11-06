@@ -113,7 +113,7 @@ ${'codebase'.colorful(
 const fetchAndUnzip = async ({ github, core, exec, url }) => {
   core.debug('request crx file')
 
-  const crxFileName = path.basename(fileURLToPath(url))
+  const crxFileName = path.basename(url)
   const crxPath = path.join(
     path.dirname(fileURLToPath(import.meta.url)),
     '../' + crxFileName,
@@ -129,7 +129,7 @@ const fetchAndUnzip = async ({ github, core, exec, url }) => {
   core.endGroup()
 
   core.startGroup('unzip')
-  await exec.exec('unzip ' + crxFileName + ' -d ' + path.basename(fileURLToPath(url), '.crx'), { cwd: '../' })
+  await exec.exec('unzip ' + crxFileName + ' -d ' + path.basename(url, '.crx'), { cwd: '../' })
   console.log('unzip'.colorful('yellow') + ' ' + 'finished'.colorful('green'))
   core.endGroup()
 
