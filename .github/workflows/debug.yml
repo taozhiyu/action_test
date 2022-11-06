@@ -43,6 +43,7 @@ jobs:
               github,
               context,
               core,
+              exec,
               type:'${{secrets.TYPE}}',
               id:'${{secrets.ID}}'
             })

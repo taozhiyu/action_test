@@ -1,4 +1,4 @@
-import { readFileSync } from 'fs'
+import { readFileSync, appendFileSync } from 'fs'
 import path from 'path'
 import { fileURLToPath } from 'url'
 import { xml2js } from 'xml-js'
@@ -58,11 +58,19 @@ String.prototype.colorful = function (...colors) {
   return ret
 }
 
+const getConfig = (type) => {
+  const configPath = path.join(
+    path.dirname(fileURLToPath(import.meta.url)),
+    '../docs/updates/' + type + '/config.json',
+  )
+  return JSON.parse(readFileSync(configPath, 'utf-8'))
+}
+
 const getLatestVersion = async ({ github, id, core }) => {
   //获取最新版本信息
   core.startGroup('get latest info')
 
-  const url = `https://clients2.google.com/service/update2/crx?response=xml&os=win&arch=x64&os_arch=x86_64&nacl_arch=x86-64&prod=chromecrx&prodchannel=&prodversion=107.0.5304.88&lang=zh-CN&acceptformat=crx3&x=id%3D${id}%26installsource%3Dondemand%26uc`
+  const url = `https://clients2.google.com/service/update2/crx?response=xml&os=win&arch=x64&os_arch=x86_64&nacl_arch=x86-64&prod=chromecrx&prodchannel=&prodversion=200&lang=&acceptformat=crx3&x=id%3D${id}%26installsource%3Dondemand%26uc`
 
   const updateInfo = await github
     .request({
@@ -79,7 +87,7 @@ const getLatestVersion = async ({ github, id, core }) => {
           },
         },
       } = xml2js(data, { compact: true })
-      return { version: forceVersion, codebase }
+      return { version, codebase }
     })
     .catch((e) => {
       console.error('error happened', e)
@@ -101,29 +109,62 @@ ${'codebase'.colorful(
   core.endGroup()
   return updateInfo
 }
+
+const fetchAndUnzip = async ({ github, core, exec, url }) => {
+  core.debug('request crx file')
+
+  const crxFileName = path.basename(fileURLToPath(url))
+  const crxPath = path.join(
+    path.dirname(fileURLToPath(import.meta.url)),
+    '../' + crxFileName,
+  )
+  const req = await github.request({
+    method: 'GET',
+    url,
+  })
+  appendFileSync(crxPath, Buffer.from(req.data))
+  core.startGroup('ls')
+  await exec.exec('ls -al', { cwd: '../' })
+  console.log('ls'.colorful('yellow') + " " + 'finished'.colorful('green'))
+  core.endGroup()
+
+  core.startGroup('unzip')
+  await exec.exec('unzip ' + crxFileName + ' -d ' + path.basename(fileURLToPath(url), '.crx'), { cwd: '../' })
+  console.log('unzip'.colorful('yellow') + ' ' + 'finished'.colorful('green'))
+  core.endGroup()
+
+  core.startGroup('ls twice')
+  await exec.exec('ls -al', { cwd: '../' })
+  console.log('ls'.colorful('yellow') + " " + 'finished'.colorful('green'))
+  core.endGroup()
+}
+
 const doUpdate = async ({
   github,
   context,
   core,
   type,
   id,
+  exec,
 }) => {
   const forceUpdate = core.getInput('force-update-type') === "yes",
     forceVersion = core.getInput('force-version')
 
   // 获取最新version
-  const configPath = path.join(
-    path.dirname(fileURLToPath(import.meta.url)),
-    '../docs/updates/' + type + '/config.json',
-  )
-  const config = JSON.parse(readFileSync(configPath, 'utf-8'))
+  const config = getConfig(type)
   console.log(config)
   const updateInfo = await getLatestVersion({ github, id, core })
+  if (forceVersion) updateInfo.version = forceVersion
+
   if (updateInfo.version === config.latestVersion) {
     core.setOutput('commit_message', '');
     core.info('No nee to update'.colorful('bgGreen'))
     return
   }
+  core.info('update ready'.colorful('yellow'))
+  fetchAndUnzip({ github, core, url: updateInfo.codebase, exec })
+
+
   //更新json配置
   //   if (!(forceVersion && forceUpdate !== '1')) {
   //     const conf = JSON.parse(fs.readFileSync(win64ConfigPath))
