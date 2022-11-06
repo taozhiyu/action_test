@@ -56,22 +56,26 @@ const handleMain = async ({ url, io }) => {
         { minified: true, compact: true, comments: false },
         rawCode,
     )
-    console.log(output.code)
+    // console.log(output.code)
     await io.mkdirP(path.join(
         path.dirname(fileURLToPath(import.meta.url)),
         '../../docs/updates/tree/' + fileName
     ));
-    fs.writeFile(
+    fs.writeFileSync(
         path.join(
             path.dirname(fileURLToPath(import.meta.url)),
             '../../docs/updates/tree/' + fileName + '/content.js',
         ),
-        output.code,
-        (err) => {
-            console.log(err)
-        },
+        output.code
     )
-    return true
+    return {
+        code: 0,
+        output: {
+            fileRules: {
+                'content.js': 'updates/tree/' + fileName + '/content.js'
+            }
+        }
+    }
 }
 
 export default handleMain

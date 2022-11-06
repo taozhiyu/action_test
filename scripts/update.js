@@ -1,4 +1,4 @@
-import { readFileSync, appendFileSync } from 'fs'
+import { readFileSync, appendFileSync, writeFileSync } from 'fs'
 import path from 'path'
 import { fileURLToPath } from 'url'
 import { xml2js } from 'xml-js'
@@ -56,14 +56,6 @@ String.prototype.colorful = function (...colors) {
     }
   })
   return ret
-}
-
-const getConfig = (type) => {
-  const configPath = path.join(
-    path.dirname(fileURLToPath(import.meta.url)),
-    '../docs/updates/' + type + '/config.json',
-  )
-  return JSON.parse(readFileSync(configPath, 'utf-8'))
 }
 
 const getLatestVersion = async ({ github, id, core }) => {
@@ -155,11 +147,15 @@ const doUpdate = async ({
   exec,
   io
 }) => {
+  const configPath = path.join(
+    path.dirname(fileURLToPath(import.meta.url)),
+    '../docs/updates/' + type + '/config.json',
+  )
   const forceUpdate = core.getInput('force-update-type') === "yes",
     forceVersion = core.getInput('force-version')
 
   // 获取最新version
-  const config = getConfig(type)
+  const config = JSON.parse(readFileSync(configPath, 'utf-8'))
   console.log(config)
   const updateInfo = await getLatestVersion({ github, id, core })
   if (forceVersion) updateInfo.version = forceVersion
@@ -171,7 +167,6 @@ const doUpdate = async ({
   }
   core.info('update ready'.colorful('yellow'))
   try {
-
     await fetchAndUnzip({ github, core, url: updateInfo.codebase, exec })
   } catch (error) {
     core.setfailed('fetch & unzip failed')
@@ -180,32 +175,20 @@ const doUpdate = async ({
   const { default: handleMain } = await import('./modules/' + type + '.js')
   try {
     const result = await handleMain({ url: updateInfo.codebase, io })
-    core.info('handle result:', result)
-    if (!result) {
+    core.info('handle result:')
+    console.log(result)
+    if (!result || 0 !== result.code) {
       core.setfailed('handle error')
     }
+    core.setOutput('commit_message', type + ' has automatically updated');
+    config.latestVersion = updateInfo.version
+    config.updateDate = new Date().toGMTString()
+    const newConfig = { ...config, ...result.output }
+    writeFileSync(configPath, JSON.stringify(newConfig, "", 4))
   } catch (error) {
     console.log(error)
     core.setfailed('handle error')
   }
-  //更新json配置
-  //   if (!(forceVersion && forceUpdate !== '1')) {
-  //     const conf = JSON.parse(fs.readFileSync(win64ConfigPath))
-  //     console.log(conf)
-  //     conf.version = update_version
-  //     conf.download = assetInfo.data.browser_download_url
-  //     conf.downloadCN = assetInfo.data.browser_download_url.replace(
-  //       'github.com',
-  //       'hub.fastgit.xyz',
-  //     )
-  //     if (isDev) conf.download = conf.downloadCN
-  //     fs.writeFileSync(win64ConfigPath, JSON.stringify(conf, '', 4))
-  //   }
-  //   //删除缓存文件
-  //   fs.unlinkSync(exePath)
-  //   fs.unlinkSync(asarZip)
-
-  //   core.setOutput('commit_message', `update ${checkType} V${update_version}`)
 }
 
 export default doUpdate
