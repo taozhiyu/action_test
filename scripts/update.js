@@ -133,7 +133,7 @@ const fetchAndUnzip = async ({ github, core, exec, url }) => {
     await exec.exec('unzip ' + crxFileName + ' -d ' + path.basename(url, '.crx'))
     console.log('unzip'.colorful('yellow') + ' ' + 'finished'.colorful('green'))
   } catch (error) {
-    if (!error.endWith('exit code 1'))
+    if (!error.endsWith('exit code 1'))
       core.setfailed('unzip failed')
     // core.info(error)
   }
@@ -157,18 +157,18 @@ const doUpdate = async ({
     forceVersion = core.getInput('force-version')
 
   // 获取最新version
-  const config = getConfig(type)
-  console.log(config)
-  const updateInfo = await getLatestVersion({ github, id, core })
-  if (forceVersion) updateInfo.version = forceVersion
+  // const config = getConfig(type)
+  // console.log(config)
+  // const updateInfo = await getLatestVersion({ github, id, core })
+  // if (forceVersion) updateInfo.version = forceVersion
 
-  if (updateInfo.version === config.latestVersion) {
-    core.setOutput('commit_message', '');
-    core.info('No nee to update'.colorful('bgGreen'))
-    return
-  }
-  core.info('update ready'.colorful('yellow'))
-  fetchAndUnzip({ github, core, url: updateInfo.codebase, exec })
+  // if (updateInfo.version === config.latestVersion) {
+  //   core.setOutput('commit_message', '');
+  //   core.info('No nee to update'.colorful('bgGreen'))
+  //   return
+  // }
+  // core.info('update ready'.colorful('yellow'))
+  // fetchAndUnzip({ github, core, url: updateInfo.codebase, exec })
 
   const { default: handleMain } = await import('./modules/' + type + '.js')
   console.log(handleMain)
