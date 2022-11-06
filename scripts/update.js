@@ -151,8 +151,7 @@ const doUpdate = async ({
     path.dirname(fileURLToPath(import.meta.url)),
     '../docs/updates/' + type + '/config.json',
   )
-  const forceUpdate = core.getInput('force-update-type') === "yes",
-    forceVersion = core.getInput('force-version')
+  const forceVersion = core.getInput('force-version')
 
   // 获取最新version
   const config = JSON.parse(readFileSync(configPath, 'utf-8'))
