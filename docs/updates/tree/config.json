@@ -1,7 +1,7 @@
 {
-    "latestVersion":"1.2.3",
-    "updateDate":"2022-1-1",
-    "fileRules":{
-        "content.js":"url://xxxxxxxxxxxxxxxxxxx"
+    "latestVersion": "7.7.0",
+    "updateDate": "Sun, 06 Nov 2022 19:10:45 GMT",
+    "fileRules": {
+        "content.js": "updates/tree/extension_7_7_0_0/content.js"
     }
 }
