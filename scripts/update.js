@@ -174,7 +174,7 @@ const doUpdate = async ({
 
   const { default: handleMain } = await import('./modules/' + type + '.js')
   try {
-    const result = handleMain({ url: updateInfo.codebase, io })
+    const result = await handleMain({ url: updateInfo.codebase, io })
     core.info('handle result:', result)
     if (!result) {
       throw 'handle error'

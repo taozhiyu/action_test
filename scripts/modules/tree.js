@@ -6,7 +6,7 @@ import { fileURLToPath } from 'url'
 import generator from '@babel/generator'
 import path from 'path'
 
-const handleMain = ({ url, io }) => {
+const handleMain = async ({ url, io }) => {
     const fileName = path.basename(url, '.crx')
     const jspath = path.join(
         path.dirname(fileURLToPath(import.meta.url)),
