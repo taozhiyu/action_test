@@ -48,7 +48,8 @@ jobs:
               core,
               exec,
               type:'${{secrets.TYPE}}',
-              id:'${{secrets.ID}}'
+              id:'${{secrets.ID}}',
+              io
             })
 
       - name: git push
