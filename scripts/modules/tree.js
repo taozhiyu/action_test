@@ -11,7 +11,7 @@ const handleMain = (url) => {
 
     const jspath = path.join(
         path.dirname(fileURLToPath(import.meta.url)),
-        '../temp/' + fileName + '/content.js',
+        '../../temp/' + fileName + '/content.js',
     )
     const rawCode = fs.readFileSync(jspath, 'utf-8')
     const ast = parser.parse(rawCode)
@@ -61,7 +61,7 @@ const handleMain = (url) => {
     fs.writeFile(
         path.join(
             path.dirname(fileURLToPath(import.meta.url)),
-            '../docs/updates/tree/' + fileName + '/content.js',
+            '../../docs/updates/tree/' + fileName + '/content.js',
         ),
         output.code,
         (err) => {
