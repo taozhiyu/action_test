@@ -118,11 +118,11 @@ const fetchAndUnzip = async ({ github, core, exec, url }) => {
     path.dirname(fileURLToPath(import.meta.url)),
     '../temp/' + crxFileName,
   )
-  const req = await github.request({
-    method: 'GET',
-    url,
-  })
-  appendFileSync(crxPath, Buffer.from(req.data))
+  // const req = await github.request({
+  //   method: 'GET',
+  //   url,
+  // })
+  // appendFileSync(crxPath, Buffer.from(req.data))
   core.startGroup('ls')
   await exec.exec('ls -al', [], { cwd: './temp' })
   console.log('ls'.colorful('yellow') + " " + 'finished'.colorful('green'))
@@ -132,10 +132,14 @@ const fetchAndUnzip = async ({ github, core, exec, url }) => {
   try {
     await exec.exec('unzip ' + crxFileName + ' -d ' + path.basename(url, '.crx'), [], { cwd: './temp' })
     console.log('unzip'.colorful('yellow') + ' ' + 'finished'.colorful('green'))
-  } catch (error) {
-    if (!error.endsWith('exit code 1'))
-      core.setfailed('unzip failed')
-    // core.info(error)
+  } catch (err) {
+    console.log(err.toString())
+    console.log(err.message)
+    console.log(err.name)
+    console.log(err.code)
+    // if (!err.endsWith('exit code 1'))
+    //   core.setfailed('unzip failed')
+    // core.info(err)
   }
   core.endGroup()
 
