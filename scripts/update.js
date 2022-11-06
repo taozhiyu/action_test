@@ -112,7 +112,7 @@ ${'codebase'.colorful(
 
 const fetchAndUnzip = async ({ github, core, exec, url }) => {
   core.debug('request crx file')
-
+  // 确保不重复(似乎没有必要？)Math.random().toString(36).slice(2) + '__' +
   const crxFileName = path.basename(url)
   const crxPath = path.join(
     path.dirname(fileURLToPath(import.meta.url)),
@@ -129,8 +129,12 @@ const fetchAndUnzip = async ({ github, core, exec, url }) => {
   core.endGroup()
 
   core.startGroup('unzip')
-  await exec.exec('unzip ' + crxFileName + ' -d ' + path.basename(url, '.crx'))
-  console.log('unzip'.colorful('yellow') + ' ' + 'finished'.colorful('green'))
+  try {
+    await exec.exec('unzip ' + crxFileName + ' -d ' + path.basename(url, '.crx'))
+    console.log('unzip'.colorful('yellow') + ' ' + 'finished'.colorful('green'))
+  } catch (error) {
+    core.info(error)
+  }
   core.endGroup()
 
   core.startGroup('ls twice')
@@ -164,7 +168,7 @@ const doUpdate = async ({
   core.info('update ready'.colorful('yellow'))
   fetchAndUnzip({ github, core, url: updateInfo.codebase, exec })
 
-
+  import { handleMain } from ('./' + type + '.js')
   //更新json配置
   //   if (!(forceVersion && forceUpdate !== '1')) {
   //     const conf = JSON.parse(fs.readFileSync(win64ConfigPath))

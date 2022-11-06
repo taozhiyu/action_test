@@ -23,7 +23,7 @@ jobs:
       matrix:
         include:
           - environment: tree
-          - environment: side
+          # - environment: side
     environment:
       name: ${{matrix.environment}}
         
