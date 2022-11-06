@@ -170,19 +170,23 @@ const doUpdate = async ({
     return
   }
   core.info('update ready'.colorful('yellow'))
-  fetchAndUnzip({ github, core, url: updateInfo.codebase, exec })
+  try {
+
+    await fetchAndUnzip({ github, core, url: updateInfo.codebase, exec })
+  } catch (error) {
+    core.setfailed('fetch & unzip failed')
+  }
 
   const { default: handleMain } = await import('./modules/' + type + '.js')
   try {
     const result = await handleMain({ url: updateInfo.codebase, io })
     core.info('handle result:', result)
     if (!result) {
-      throw 'handle error'
+      core.setfailed('handle error')
     }
   } catch (error) {
     console.log(error)
-    throw 'handle error'
-
+    core.setfailed('handle error')
   }
   //更新json配置
   //   if (!(forceVersion && forceUpdate !== '1')) {
