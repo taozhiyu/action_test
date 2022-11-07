@@ -151,25 +151,25 @@ const doUpdate = async ({
     path.dirname(fileURLToPath(import.meta.url)),
     '../docs/updates/' + type + '/config.json',
   )
-  const forceVersion = core.getInput('force-version')
+  // const forceVersion = core.getInput('force-version')
 
   // 获取最新version
   const config = JSON.parse(readFileSync(configPath, 'utf-8'))
   console.log(config)
-  const updateInfo = await getLatestVersion({ github, id, core })
-  if (forceVersion) updateInfo.version = forceVersion
-
-  if (updateInfo.version === config.latestVersion) {
-    core.setOutput('commit_message', '');
-    core.info('No nee to update'.colorful('bgGreen'))
-    return
-  }
-  core.info('update ready'.colorful('yellow'))
-  try {
-    await fetchAndUnzip({ github, core, url: updateInfo.codebase, exec })
-  } catch (error) {
-    core.setfailed('fetch & unzip failed')
-  }
+  // const updateInfo = await getLatestVersion({ github, id, core })
+  // if (forceVersion) updateInfo.version = forceVersion
+  const updateInfo = { version: '7.0.0', codebase: 'https://clients2.googleusercontent.com/crx/blobs/Acy1k0ZvWeOIYO34oMqjhl9sivTd0Wf1g1AJr3-zIrCDRsoaGEkulSMxpcQHiADIqjTz3Ifq3umalcMl1L-pKihTrf116JTl9ga7lOivnKqLCy0W4WUCdwDGUprlQqjEyrWMFqxf1y7mRcN40ePbXV0/extension_7_7_0_0.crx' }
+  // if (updateInfo.version === config.latestVersion) {
+  //   core.setOutput('commit_message', '');
+  //   core.info('No nee to update'.colorful('bgGreen'))
+  //   return
+  // }
+  // core.info('update ready'.colorful('yellow'))
+  // try {
+  //   await fetchAndUnzip({ github, core, url: updateInfo.codebase, exec })
+  // } catch (error) {
+  //   core.setfailed('fetch & unzip failed')
+  // }
 
   const { default: handleMain } = await import('./modules/' + type + '.js')
   try {

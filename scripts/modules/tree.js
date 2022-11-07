@@ -591,13 +591,25 @@ const replaceLists = [
     },
 ]
 
-const handleMain = async ({ url, io }) => {
-    const fileName = path.basename(url, '.crx')
-    const jspath = path.join(
-        path.dirname(fileURLToPath(import.meta.url)),
-        '../../temp/' + fileName + '/content.js',
-    )
-    const rawCode = fs.readFileSync(jspath, 'utf-8')
+const handleManifest = (txt) => {
+    const obj = JSON.parse(text)
+    if (obj.manifest_version !== 2)
+        throw 'manifest_version updated!'
+    return JSON.stringify(obj, "", 4)
+}
+
+const handleContent_zh = (code) =>
+    replaceLists.map((a) => {
+        if (!a.matchedNumber || a.matchedNumber === code.match(a.rule)?.length)
+            code = code.replace(a.rule, a.replaceWith)
+        else
+            core.warning(
+                `[${a.rule.toString()}] matched numbers verified error.\nGot ${code.match(a.rule)?.length
+                }, but should be ${a.matchedNumber}.\nskip this rule.`,
+            )
+    })
+
+const handleContent = (rawCode) => {
     const ast = parser.parse(rawCode)
     traverse.default(ast, {
         TemplateLiteral(path) {
@@ -641,25 +653,26 @@ const handleMain = async ({ url, io }) => {
             }
         },
     })
-    let { code } = generator.default(
+    const { code } = generator.default(
         ast,
         { minified: true, compact: true, comments: false },
         rawCode,
     )
-    replaceLists.map((a) => {
-        if (!a.matchedNumber || a.matchedNumber === code.match(a.rule)?.length)
-            code = code.replace(a.rule, a.replaceWith)
-        else
-            core.warning(
-                `[${a.rule.toString()}] matched numbers verified error.\nGot ${code.match(a.rule)?.length
-                }, but should be ${a.matchedNumber}.\nskip this rule.`,
-            )
-    })
-    // console.log(output.code)
+    return code
+}
+
+const handleMain = async ({ url, io }) => {
+    const fileName = path.basename(url, '.crx')
+    const jspath = path.join(
+        path.dirname(fileURLToPath(import.meta.url)),
+        '../../temp/' + fileName + '/content.js',
+    )
     await io.mkdirP(path.join(
         path.dirname(fileURLToPath(import.meta.url)),
         '../../docs/updates/tree/' + fileName
     ));
+    const rawCode = fs.readFileSync(jspath, 'utf-8')
+    const code = handleContent(rawCode)
     fs.writeFileSync(
         path.join(
             path.dirname(fileURLToPath(import.meta.url)),
@@ -667,6 +680,18 @@ const handleMain = async ({ url, io }) => {
         ),
         code
     )
+    const zhCode = handleContent_zh(code)
+    fs.writeFileSync(
+        path.join(
+            path.dirname(fileURLToPath(import.meta.url)),
+            '../../docs/updates/tree/' + fileName + '/content.js',
+        ),
+        zhCode
+    )
+
+
+    const rawManifest = fs.readFileSync(path.join(path.dirname(jspath), './manifest.json'), 'utf-8')
+    const manifest = handleManifest(rawManifest)
     return {
         code: 0,
         output: {
