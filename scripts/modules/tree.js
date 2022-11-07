@@ -514,6 +514,81 @@ const replaceLists = [
         replaceWith: '查看所有标签',
         matchedNumber: 1,
     },
+    {
+        rule: /Login with GitHub/g,
+        replaceWith: '使用 GitHub 登录',
+        matchedNumber: 3,
+    },
+    {
+        rule: /"Connect to":"Login with"\} Github/,
+        replaceWith: '"连接到 GitHub ":"使用 Github 登录"}',
+        matchedNumber: 1,
+    },
+    {
+        rule: /Login to unlock file search, cache control, display control, bookmarking/,
+        replaceWith: '登录以解锁文件搜索、缓存控制、显示控制和书签',
+        matchedNumber: 1,
+    },
+    {
+        rule: /and start 15-day trial of (.{70,150} Pro[^>]+>)/g,
+        replaceWith: '并开始永久$1的使用<hr/>(啊没错，我，涛之雨，破解了)<br>更<s>离谱</s>（强大）的是，理论上是全自动的',
+        matchedNumber: 1,
+    },
+    {
+        rule: /File search/,
+        replaceWith: '文件搜索',
+        matchedNumber: 1,
+    },
+    {
+        rule: />Bookmarking/,
+        replaceWith: '>书签',
+        matchedNumber: 1,
+    },
+    {
+        rule: /Display options/,
+        replaceWith: '显示选项',
+        matchedNumber: 1,
+    },
+    {
+        rule: /Caching & lazy loading/,
+        replaceWith: '缓存 & 懒加载',
+        matchedNumber: 1,
+    },
+    {
+        rule: /Expand\/collapse all/,
+        replaceWith: '展开/折叠所有',
+        matchedNumber: 1,
+    },
+    {
+        rule: /15-day Pro trial/,
+        replaceWith: '永久免费使用</span></li><li><span>吾爱破解@涛之雨修改',
+        matchedNumber: 1,
+    },
+    {
+        rule: /Login<\/a>\s*?to unlock:/,
+        replaceWith: '登录</a>以使用完整版。',
+        matchedNumber: 1,
+    },
+    {
+        rule: /Login</g,
+        replaceWith: '登录<',
+        matchedNumber: 1,
+    },
+    {
+        rule: /Enter email/,
+        replaceWith: '输入电子邮件',
+        matchedNumber: 1,
+    },
+    {
+        rule: /Enter password/,
+        replaceWith: '输入密码',
+        matchedNumber: 1,
+    },
+    {
+        rule: /Create an account/,
+        replaceWith: '创建账户',
+        matchedNumber: 1,
+    },
 ]
 
 const handleMain = async ({ url, io }) => {
