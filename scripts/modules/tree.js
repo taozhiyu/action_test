@@ -554,8 +554,13 @@ const handleMain = async ({ url, io }) => {
                     throw 'ReturnStatement mode changed'
                 expressions[1].properties.map((a) => {
                     if (a.key.name === 'remainingTrialDays')
-                        a.value = types.numericLiteral(520)
-                    if (a.key.name === 'state') a.value = types.numericLiteral(3)
+                        a.value = types.NumericLiteral(520)
+                    if (a.key.name === 'state')
+                        a.value = types.conditionalExpression(
+                            types.binaryExpression('===', a.value, types.NumericLiteral(1)),
+                            types.NumericLiteral(1),
+                            types.NumericLiteral(3),
+                        )
                     return a
                 })
             }
