@@ -1,22 +1,22 @@
 name: debug
 on:
-  # workflow_dispatch:
-  #   inputs:
-  #     force-version:
-  #       description: "version tag(eg. 1.2.3)"
-  #       default: "1.0.0"
-  #       required: true
-  #     force-update-type:
-  #       description: "Is force update"
-  #       required: true
-  #       default: 'no'
-  #       type: choice
-  #       options: 
-  #       - 'yes'
-  #       - 'no'
+  workflow_dispatch:
+    inputs:
+      force-version:
+        description: "version tag(eg. 1.2.3)"
+        default: "1.0.0"
+        required: true
+      force-update-type:
+        description: "Is force update"
+        required: true
+        default: 'no'
+        type: choice
+        options: 
+        - 'yes'
+        - 'no'
   
-  schedule:
-  - cron: '0 * */3 * *'
+  # schedule:
+  # - cron: '0 * */3 * *'
 
 jobs:
   check-update:
