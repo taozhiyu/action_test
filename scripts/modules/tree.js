@@ -661,42 +661,55 @@ const handleContent = (rawCode) => {
     return code
 }
 
-const handleMain = async ({ url, io }) => {
+const handleMain = async ({ url, io, hash }) => {
     const fileName = path.basename(url, '.crx')
     const jspath = path.join(
         path.dirname(fileURLToPath(import.meta.url)),
-        '../../temp/' + fileName + '/content.js',
+        '../../temp/' + hash + "/" + fileName + '/content.js',
     )
     await io.mkdirP(path.join(
         path.dirname(fileURLToPath(import.meta.url)),
-        '../../docs/updates/tree/' + fileName
+        '../../docs/updates/tree/' + hash + '/' + fileName
     ));
     const rawCode = fs.readFileSync(jspath, 'utf-8')
-    const code = handleContent(rawCode)
+    try {
+        const code = handleContent(rawCode)
+    } catch (e) {
+        return { code: -1, message: e || 'handle content error' }
+    }
     fs.writeFileSync(
         path.join(
             path.dirname(fileURLToPath(import.meta.url)),
-            '../../docs/updates/tree/' + fileName + '/content.js',
+            '../../docs/updates/tree/' + fileName + '/' + hash + '/content.js',
         ),
         code
     )
-    const zhCode = handleContent_zh(code)
+    try {
+        const zhCode = handleContent_zh(code)
+    } catch (e) {
+        return { code: -1, message: e || 'handle content to zh error' }
+    }
     fs.writeFileSync(
         path.join(
             path.dirname(fileURLToPath(import.meta.url)),
-            '../../docs/updates/tree/' + fileName + '/content.js',
+            '../../docs/updates/tree/' + fileName + '/' + hash + '/content.js',
         ),
         zhCode
     )
 
 
     const rawManifest = fs.readFileSync(path.join(path.dirname(jspath), './manifest.json'), 'utf-8')
-    const manifest = handleManifest(rawManifest)
+
+    try {
+        const manifest = handleManifest(rawManifest)
+    } catch (e) {
+        return { code: -1, message: e || 'handle manifest file error' }
+    }
     return {
         code: 0,
         output: {
             fileRules: {
-                'content.js': 'updates/tree/' + fileName + '/content.js'
+                'content.js': 'updates/tree/' + fileName + '/' + hash + '/content.js'
             }
         }
     }

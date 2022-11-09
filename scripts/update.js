@@ -2,38 +2,11 @@ import { readFileSync, appendFileSync, writeFileSync } from 'fs'
 import path from 'path'
 import { fileURLToPath } from 'url'
 import { xml2js } from 'xml-js'
-// import { Octokit } from '@octokit/rest'
-// const release = async () => {
-//   //发布新release
-//   const releaseInfo = await github.rest.repos.createRelease({
-//     owner: context.repo.owner,
-//     repo: context.repo.repo,
-//     tag_name: 'v' + update_version,
-//     name: 'v' + update_version,
-//     body: 'update success!\n\n- [x] Update time: ' + new Date().toUTCString(),
-//     prerelease: isDev,
-//   })
-//   //console.log(releaseInfo);
 
-//   const assetInfo = await github.rest.repos.uploadReleaseAsset({
-//     owner: context.repo.owner,
-//     repo: context.repo.repo,
-//     release_id: releaseInfo.data.id,
-//     name: 'Typro-Update-V' + update_version + '.exe',
-//     data: readFileSync(exePath),
-//   })
-//   //console.log(assetInfo);
-
-//   const assetInfo2 = await github.rest.repos.uploadReleaseAsset({
-//     owner: context.repo.owner,
-//     repo: context.repo.repo,
-//     release_id: releaseInfo.data.id,
-//     name: 'asar-file-V' + update_version + '.zip',
-//     data: readFileSync(asarZip),
-//   })
-// }
 import { colorNames, modifierNames } from 'ansi-styles'
 import styles from 'ansi-styles'
+
+Object.defineProperty(globalThis, 'random', { get: () => Math.random().toString(36).slice(2) })
 
 String.prototype.colorful = function (...colors) {
   const text = this,
@@ -104,11 +77,11 @@ ${'codebase'.colorful(
 
 const fetchAndUnzip = async ({ github, core, exec, url }) => {
   core.debug('request crx file')
-  // 确保不重复(似乎没有必要？)Math.random().toString(36).slice(2) + '__' +
+  const randPath = random
   const crxFileName = path.basename(url)
   const crxPath = path.join(
     path.dirname(fileURLToPath(import.meta.url)),
-    '../temp/' + crxFileName,
+    '../temp/' + randPath + '/' + crxFileName,
   )
   const req = await github.request({
     method: 'GET',
@@ -116,13 +89,13 @@ const fetchAndUnzip = async ({ github, core, exec, url }) => {
   })
   appendFileSync(crxPath, Buffer.from(req.data))
   core.startGroup('ls')
-  await exec.exec('ls -al', [], { cwd: './temp' })
+  await exec.exec('ls -al', [], { cwd: './temp/' + randPath })
   console.log('ls'.colorful('yellow') + " " + 'finished'.colorful('green'))
   core.endGroup()
 
   core.startGroup('unzip')
   try {
-    await exec.exec('unzip ' + crxFileName + ' -d ' + path.basename(url, '.crx'), [], { cwd: './temp' })
+    await exec.exec('unzip ' + crxFileName + ' -d ' + path.basename(url, '.crx'), [], { cwd: './temp/' + randPath })
     console.log('unzip'.colorful('yellow') + ' ' + 'finished'.colorful('green'))
   } catch (err) {
     if (!err.message.endsWith('exit code 1')) {
@@ -132,10 +105,11 @@ const fetchAndUnzip = async ({ github, core, exec, url }) => {
   }
   core.endGroup()
 
-  core.startGroup('ls twice')
-  await exec.exec('ls -al', [], { cwd: './temp' })
-  console.log('ls'.colorful('yellow') + " " + 'finished'.colorful('green'))
-  core.endGroup()
+  // core.startGroup('ls twice')
+  // await exec.exec('ls -al', [], { cwd: './temp/'+randPath })
+  // console.log('ls'.colorful('yellow') + " " + 'finished'.colorful('green'))
+  // core.endGroup()
+  return { hash: randPath }
 }
 
 const doUpdate = async ({
@@ -166,26 +140,29 @@ const doUpdate = async ({
   // }
   // core.info('update ready'.colorful('yellow'))
   // try {
-  //   await fetchAndUnzip({ github, core, url: updateInfo.codebase, exec })
+  //     const { hash } = await fetchAndUnzip({ github, core, url: updateInfo.codebase, exec })
   // } catch (error) {
   //   core.setfailed('fetch & unzip failed')
   // }
 
+  const hash = '.'
+
   const { default: handleMain } = await import('./modules/' + type + '.js')
   try {
-    const result = await handleMain({ url: updateInfo.codebase, io })
+    const result = await handleMain({ url: updateInfo.codebase, io, hash })
     core.info('handle result:')
     console.log(result)
     if (!result || 0 !== result.code) {
+      core.error(result.message || "Unknown error")
       core.setfailed('handle error')
     }
-    core.setOutput('commit_message', type + ' has automatically updated');
     config.latestVersion = updateInfo.version
     config.updateDate = new Date().toGMTString()
     const newConfig = { ...config, ...result.output }
+    core.setOutput('commit_message', `[@${config.updateDate}]${type} has automatically updated to V${config.latestVersion}`);
     writeFileSync(configPath, JSON.stringify(newConfig, "", 4))
   } catch (error) {
-    console.log(error)
+    core.error(error)
     core.setfailed('handle error')
   }
 }
