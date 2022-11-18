@@ -1,0 +1,8 @@
+{
+    "schemaVersion": 1,
+    "label": "状态",
+    "message": "通过",
+    "color": "green",
+    "namedLogo": "google chrome",
+    "style": "for-the-badge"
+}
