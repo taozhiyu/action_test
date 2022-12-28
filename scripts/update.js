@@ -1,4 +1,4 @@
-import { readFileSync, appendFileSync, writeFileSync } from 'fs'
+import { readFileSync, appendFileSync, writeFileSync, existsSync, mkdirSync } from 'fs'
 import path from 'path'
 import { fileURLToPath } from 'url'
 import { xml2js } from 'xml-js'
@@ -81,13 +81,17 @@ const fetchAndUnzip = async ({ github, core, exec, url }) => {
   const crxFileName = path.basename(url)
   const crxPath = path.join(
     path.dirname(fileURLToPath(import.meta.url)),
-    '../temp/' + randPath + '/' + crxFileName,
+    '../temp/' + randPath + '/',
   )
+
+  if (!existsSync(crxPath)) {
+    mkdirSync(crxPath, { recursive: true });
+  }
   const req = await github.request({
     method: 'GET',
     url,
   })
-  appendFileSync(crxPath, Buffer.from(req.data))
+  appendFileSync(path.join(crxPath,crxFileName), Buffer.from(req.data))
   core.startGroup('ls')
   await exec.exec('ls -al', [], { cwd: './temp/' + randPath })
   console.log('ls'.colorful('yellow') + " " + 'finished'.colorful('green'))
@@ -125,7 +129,7 @@ const doUpdate = async ({
     path.dirname(fileURLToPath(import.meta.url)),
     '../docs/updates/' + type + '/config.json',
   )
-  
+
   const forceVersion = core.getInput('force-version')
 
   // 获取最新version
@@ -141,9 +145,9 @@ const doUpdate = async ({
   }
   core.info('update ready'.colorful('yellow'))
   try {
-      const { hash } = await fetchAndUnzip({ github, core, url: updateInfo.codebase, exec })
+    const { hash } = await fetchAndUnzip({ github, core, url: updateInfo.codebase, exec })
   } catch (error) {
-    core.setfailed('fetch & unzip failed')
+    core.setFailed('fetch & unzip failed')
   }
 
   const hash = random//'.'
