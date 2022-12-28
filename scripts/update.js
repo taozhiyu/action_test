@@ -75,9 +75,9 @@ ${'codebase'.colorful(
   return updateInfo
 }
 
-const fetchAndUnzip = async ({ github, core, exec, url }) => {
+const fetchAndUnzip = async ({ github, core, exec, url, hash }) => {
   core.debug('request crx file')
-  const randPath = random
+  const randPath = hash
   const crxFileName = path.basename(url)
   const crxPath = path.join(
     path.dirname(fileURLToPath(import.meta.url)),
@@ -99,7 +99,8 @@ const fetchAndUnzip = async ({ github, core, exec, url }) => {
 
   core.startGroup('unzip')
   try {
-    await exec.exec('unzip ' + crxFileName + ' -d ' + path.basename(url, '.crx'), [], { cwd: './temp/' + randPath })
+    // await exec.exec('unzip ' + crxFileName + ' -d ' + path.basename(url, '.crx'), [], { cwd: './temp/' + randPath })
+    await exec.exec('unzip', [crxFileName, '-d', path.basename(url, '.crx')], { cwd: './temp/' + randPath })
     console.log('unzip'.colorful('yellow') + ' ' + 'finished'.colorful('green'))
   } catch (err) {
     if (!err.message.endsWith('exit code 1')) {
@@ -144,9 +145,9 @@ const doUpdate = async ({
     return
   }
   core.info('update ready'.colorful('yellow'))
-  let hash=""
+  const hash = random
   try {
-    hash = await fetchAndUnzip({ github, core, url: updateInfo.codebase, exec })?.hash
+    await fetchAndUnzip({ github, core, url: updateInfo.codebase, exec, hash })
   } catch {
     core.setFailed('fetch & unzip failed')
   }
