@@ -100,8 +100,8 @@ const fetchAndUnzip = async ({ github, core, exec, url, hash }) => {
 
   core.startGroup('unzip')
   try {
-    // await exec.exec('unzip ' + crxFileName + ' -d ' + path.basename(url, '.crx'), [], { cwd: './temp/' + randPath })
-    const resp = await exec.exec('unzip', ['-qq', crxFileName, '-d', path.basename(url, '.crx')], { cwd: './temp/' + randPath })
+    await exec.exec('unzip ' + crxFileName + ' -d ' + path.basename(url, '.crx'), [], { cwd: './temp/' + randPath })
+    //const resp = await exec.exec('unzip', ['-qq', crxFileName, '-d', path.basename(url, '.crx')], { cwd: './temp/' + randPath })
     core.debug("unzip returns" + resp)
     console.log('unzip'.colorful('yellow') + ' ' + 'finished'.colorful('green'))
   } catch (err) {
