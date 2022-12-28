@@ -92,7 +92,7 @@ const fetchAndUnzip = async ({ github, core, exec, url, hash }) => {
     url,
   })
   appendFileSync(path.join(crxPath, crxFileName), Buffer.from(req.data))
-  core.debug('crxFileName', path.join(crxPath, crxFileName))
+  core.debug('crxFileName' + path.join(crxPath, crxFileName))
   core.startGroup('ls')
   await exec.exec('ls -al', [], { cwd: './temp/' + randPath })
   console.log('ls'.colorful('yellow') + " " + 'finished'.colorful('green'))
@@ -111,11 +111,10 @@ const fetchAndUnzip = async ({ github, core, exec, url, hash }) => {
   }
   core.endGroup()
   // core.debug('file path')
-  core.startGroup('ls twice')
-  await exec.exec('ls -al', [], { cwd: './temp/'+randPath })
-  console.log('ls'.colorful('yellow') + " " + 'finished'.colorful('green'))
-  core.endGroup()
-  return { hash: randPath }
+  // core.startGroup('ls twice')
+  // await exec.exec('ls -al', [], { cwd: './temp/' + randPath })
+  // console.log('ls'.colorful('yellow') + " " + 'finished'.colorful('green'))
+  // core.endGroup()
 }
 
 const doUpdate = async ({
@@ -136,7 +135,7 @@ const doUpdate = async ({
 
   // 获取最新version
   const config = JSON.parse(readFileSync(configPath, 'utf-8'))
-  console.log(config)
+  core.debug(config)
   const updateInfo = await getLatestVersion({ github, id, core })
   if (forceVersion) updateInfo.version = forceVersion
   //const updateInfo = { version: '7.0.0', codebase: 'https://clients2.googleusercontent.com/crx/blobs/Acy1k0ZvWeOIYO34oMqjhl9sivTd0Wf1g1AJr3-zIrCDRsoaGEkulSMxpcQHiADIqjTz3Ifq3umalcMl1L-pKihTrf116JTl9ga7lOivnKqLCy0W4WUCdwDGUprlQqjEyrWMFqxf1y7mRcN40ePbXV0/extension_7_7_0_0.crx' }
