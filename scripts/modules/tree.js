@@ -592,7 +592,7 @@ const replaceLists = [
 ]
 
 const handleManifest = (txt) => {
-    const obj = JSON.parse(text)
+    const obj = JSON.parse(txt)
     if (obj.manifest_version !== 2)
         throw 'manifest_version updated!'
     return JSON.stringify(obj, "", 4)
