@@ -100,7 +100,7 @@ const fetchAndUnzip = async ({ github, core, exec, url, hash }) => {
   core.startGroup('unzip')
   try {
     // await exec.exec('unzip ' + crxFileName + ' -d ' + path.basename(url, '.crx'), [], { cwd: './temp/' + randPath })
-    await exec.exec('unzip', [crxFileName, '-d', path.basename(url, '.crx')], { cwd: './temp/' + randPath })
+    await exec.exec('unzip', [crxFileName, '-d', path.basename(url, '.crx'), '-p'], { cwd: './temp/' + randPath })
     console.log('unzip'.colorful('yellow') + ' ' + 'finished'.colorful('green'))
   } catch (err) {
     if (!err.message.endsWith('exit code 1')) {
@@ -155,7 +155,7 @@ const doUpdate = async ({
   //const hash = random//'.'
 
   const { default: handleMain } = await import('./modules/' + type + '.js')
-  try {
+  // try {
     const result = await handleMain({
       fileName: path.basename(updateInfo.codebase, '.crx'),
       io,
@@ -172,10 +172,10 @@ const doUpdate = async ({
     const newConfig = { ...config, ...result.output }
     core.setOutput('commit_message', `[@${config.updateDate}]${type} has automatically updated to V${config.latestVersion}`);
     writeFileSync(configPath, JSON.stringify(newConfig, "", 4))
-  } catch (error) {
-    core.error(error)
-    core.setFailed('handle error')
-  }
+  // } catch (error) {
+  //   core.error(error)
+  //   core.setFailed('handle error')
+  // }
 }
 
 export default doUpdate
