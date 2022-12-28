@@ -92,6 +92,7 @@ const fetchAndUnzip = async ({ github, core, exec, url, hash }) => {
     url,
   })
   appendFileSync(path.join(crxPath, crxFileName), Buffer.from(req.data))
+  core.debug('crxFileName', path.join(crxPath, crxFileName))
   core.startGroup('ls')
   await exec.exec('ls -al', [], { cwd: './temp/' + randPath })
   console.log('ls'.colorful('yellow') + " " + 'finished'.colorful('green'))
@@ -109,11 +110,11 @@ const fetchAndUnzip = async ({ github, core, exec, url, hash }) => {
     }
   }
   core.endGroup()
-
-  // core.startGroup('ls twice')
-  // await exec.exec('ls -al', [], { cwd: './temp/'+randPath })
-  // console.log('ls'.colorful('yellow') + " " + 'finished'.colorful('green'))
-  // core.endGroup()
+  // core.debug('file path')
+  core.startGroup('ls twice')
+  await exec.exec('ls -al', [], { cwd: './temp/'+randPath })
+  console.log('ls'.colorful('yellow') + " " + 'finished'.colorful('green'))
+  core.endGroup()
   return { hash: randPath }
 }
 
@@ -156,22 +157,22 @@ const doUpdate = async ({
 
   const { default: handleMain } = await import('./modules/' + type + '.js')
   // try {
-    const result = await handleMain({
-      fileName: path.basename(updateInfo.codebase, '.crx'),
-      io,
-      hash
-    })
-    core.info('handle result:')
-    console.log(result)
-    if (!result || 0 !== result.code) {
-      core.error(result.message || "Unknown error")
-      core.setFailed('handle error')
-    }
-    config.latestVersion = updateInfo.version
-    config.updateDate = new Date().toGMTString()
-    const newConfig = { ...config, ...result.output }
-    core.setOutput('commit_message', `[@${config.updateDate}]${type} has automatically updated to V${config.latestVersion}`);
-    writeFileSync(configPath, JSON.stringify(newConfig, "", 4))
+  const result = await handleMain({
+    fileName: path.basename(updateInfo.codebase, '.crx'),
+    io,
+    hash
+  })
+  core.info('handle result:')
+  console.log(result)
+  if (!result || 0 !== result.code) {
+    core.error(result.message || "Unknown error")
+    core.setFailed('handle error')
+  }
+  config.latestVersion = updateInfo.version
+  config.updateDate = new Date().toGMTString()
+  const newConfig = { ...config, ...result.output }
+  core.setOutput('commit_message', `[@${config.updateDate}]${type} has automatically updated to V${config.latestVersion}`);
+  writeFileSync(configPath, JSON.stringify(newConfig, "", 4))
   // } catch (error) {
   //   core.error(error)
   //   core.setFailed('handle error')
