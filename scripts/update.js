@@ -110,11 +110,11 @@ const fetchAndUnzip = async ({ github, core, exec, url, hash }) => {
     }
   }
   core.endGroup()
-  // core.debug('file path')
-  // core.startGroup('ls twice')
-  // await exec.exec('ls -al', [], { cwd: './temp/' + randPath })
-  // console.log('ls'.colorful('yellow') + " " + 'finished'.colorful('green'))
-  // core.endGroup()
+  core.debug('file path')
+  core.startGroup('ls twice')
+  await exec.exec('ls -al', [], { cwd: './temp/' + randPath + '/' + crxFileName })
+  console.log('ls'.colorful('yellow') + " " + 'finished'.colorful('green'))
+  core.endGroup()
 }
 
 const doUpdate = async ({
