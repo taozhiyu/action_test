@@ -670,9 +670,10 @@ const handleMain = async ({ fileName, io, hash }) => {
         path.dirname(fileURLToPath(import.meta.url)),
         '../../docs/updates/tree/' + hash + '/' + fileName
     ));
-    const rawCode = fs.readFileSync(jspath, 'utf-8')
+    let code = ""
     try {
-        const code = handleContent(rawCode)
+        const rawCode = fs.readFileSync(jspath, 'utf-8')
+        code = handleContent(rawCode)
     } catch (e) {
         return { code: -1, message: e || 'handle content error' }
     }
@@ -683,8 +684,9 @@ const handleMain = async ({ fileName, io, hash }) => {
         ),
         code
     )
+    let zhCode = ""
     try {
-        const zhCode = handleContent_zh(code)
+        zhCode = handleContent_zh(code)
     } catch (e) {
         return { code: -1, message: e || 'handle content to zh error' }
     }
@@ -697,9 +699,9 @@ const handleMain = async ({ fileName, io, hash }) => {
     )
 
 
-    const rawManifest = fs.readFileSync(path.join(path.dirname(jspath), './manifest.json'), 'utf-8')
-
     try {
+        const rawManifest = fs.readFileSync(path.join(path.dirname(jspath), './manifest.json'), 'utf-8')
+
         const manifest = handleManifest(rawManifest)
     } catch (e) {
         return { code: -1, message: e || 'handle manifest file error' }
