@@ -669,7 +669,7 @@ const handleMain = async ({ fileName, io, hash }) => {
     )
     await io.mkdirP(path.join(
         path.dirname(fileURLToPath(import.meta.url)),
-        '../../docs/updates/tree/' + hash + '/' + fileName
+        `../../docs/updates/tree/${hash}/${fileName}/zh/`
     ));
     let code = ""
     try {
@@ -694,7 +694,7 @@ const handleMain = async ({ fileName, io, hash }) => {
     fs.writeFileSync(
         path.join(
             path.dirname(fileURLToPath(import.meta.url)),
-            '../../docs/updates/tree/' + fileName + '/' + hash + '/content.js',
+            '../../docs/updates/tree/' + hash + '/' + fileName + '/zh/content.js',
         ),
         zhCode
     )
@@ -711,7 +711,8 @@ const handleMain = async ({ fileName, io, hash }) => {
         code: 0,
         output: {
             fileRules: {
-                'content.js': 'updates/tree/' + hash + '/' + fileName + '/content.js'
+                'content.js': 'updates/tree/' + hash + '/' + fileName + '/content.js',
+                'content.js:zh': 'updates/tree/' + hash + '/' + fileName + '/zh/content.js'
             }
         }
     }
