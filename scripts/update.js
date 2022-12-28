@@ -60,7 +60,7 @@ const getLatestVersion = async ({ github, id, core }) => {
     })
   if (!updateInfo) {
     core.endGroup()
-    core.setfailed('get update info failed')
+    core.setFailed('get update info failed')
     return
   }
   console.log(`Latest Version: 
@@ -91,7 +91,7 @@ const fetchAndUnzip = async ({ github, core, exec, url }) => {
     method: 'GET',
     url,
   })
-  appendFileSync(path.join(crxPath,crxFileName), Buffer.from(req.data))
+  appendFileSync(path.join(crxPath, crxFileName), Buffer.from(req.data))
   core.startGroup('ls')
   await exec.exec('ls -al', [], { cwd: './temp/' + randPath })
   console.log('ls'.colorful('yellow') + " " + 'finished'.colorful('green'))
@@ -104,7 +104,7 @@ const fetchAndUnzip = async ({ github, core, exec, url }) => {
   } catch (err) {
     if (!err.message.endsWith('exit code 1')) {
       core.info(err)
-      core.setfailed('unzip failed')
+      core.setFailed('unzip failed')
     }
   }
   core.endGroup()
@@ -144,22 +144,27 @@ const doUpdate = async ({
     return
   }
   core.info('update ready'.colorful('yellow'))
+  let hash=""
   try {
-    const { hash } = await fetchAndUnzip({ github, core, url: updateInfo.codebase, exec })
-  } catch (error) {
+    hash = await fetchAndUnzip({ github, core, url: updateInfo.codebase, exec })?.hash
+  } catch {
     core.setFailed('fetch & unzip failed')
   }
 
-  const hash = random//'.'
+  //const hash = random//'.'
 
   const { default: handleMain } = await import('./modules/' + type + '.js')
   try {
-    const result = await handleMain({ url: updateInfo.codebase, io, hash })
+    const result = await handleMain({
+      fileName: path.basename(updateInfo.codebase, '.crx'),
+      io,
+      hash
+    })
     core.info('handle result:')
     console.log(result)
     if (!result || 0 !== result.code) {
       core.error(result.message || "Unknown error")
-      core.setfailed('handle error')
+      core.setFailed('handle error')
     }
     config.latestVersion = updateInfo.version
     config.updateDate = new Date().toGMTString()
@@ -168,7 +173,7 @@ const doUpdate = async ({
     writeFileSync(configPath, JSON.stringify(newConfig, "", 4))
   } catch (error) {
     core.error(error)
-    core.setfailed('handle error')
+    core.setFailed('handle error')
   }
 }
 

@@ -661,8 +661,7 @@ const handleContent = (rawCode) => {
     return code
 }
 
-const handleMain = async ({ url, io, hash }) => {
-    const fileName = path.basename(url, '.crx')
+const handleMain = async ({ fileName, io, hash }) => {
     const jspath = path.join(
         path.dirname(fileURLToPath(import.meta.url)),
         '../../temp/' + hash + "/" + fileName + '/content.js',
@@ -680,7 +679,7 @@ const handleMain = async ({ url, io, hash }) => {
     fs.writeFileSync(
         path.join(
             path.dirname(fileURLToPath(import.meta.url)),
-            '../../docs/updates/tree/' + fileName + '/' + hash + '/content.js',
+            '../../docs/updates/tree/' + hash + '/' + fileName + '/content.js',
         ),
         code
     )
@@ -709,7 +708,7 @@ const handleMain = async ({ url, io, hash }) => {
         code: 0,
         output: {
             fileRules: {
-                'content.js': 'updates/tree/' + fileName + '/' + hash + '/content.js'
+                'content.js': 'updates/tree/' + hash + '/' + fileName + '/content.js'
             }
         }
     }
