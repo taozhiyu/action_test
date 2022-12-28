@@ -101,7 +101,7 @@ const fetchAndUnzip = async ({ github, core, exec, url, hash }) => {
   core.startGroup('unzip')
   try {
     // await exec.exec('unzip ' + crxFileName + ' -d ' + path.basename(url, '.crx'), [], { cwd: './temp/' + randPath })
-    const resp = await exec.exec('unzip', [crxFileName, '-d', path.basename(url, '.crx')], { cwd: './temp/' + randPath })
+    const resp = await exec.exec('unzip', [crxFileName, '-q', '-d', path.basename(url, '.crx')], { cwd: './temp/' + randPath })
     core.debug("unzip returns" + resp)
     console.log('unzip'.colorful('yellow') + ' ' + 'finished'.colorful('green'))
   } catch (err) {
@@ -111,11 +111,11 @@ const fetchAndUnzip = async ({ github, core, exec, url, hash }) => {
     }
   }
   core.endGroup()
-  core.debug('file path')
-  core.startGroup('ls twice')
-  await exec.exec('ls -al', [], { cwd: './temp/' + randPath + '/' + crxFileName })
-  console.log('ls'.colorful('yellow') + " " + 'finished'.colorful('green'))
-  core.endGroup()
+  // core.debug('file path')
+  // core.startGroup('ls twice')
+  // await exec.exec('ls -al', [], { cwd: './temp/' + randPath + '/' + crxFileName })
+  // console.log('ls'.colorful('yellow') + " " + 'finished'.colorful('green'))
+  // core.endGroup()
 }
 
 const doUpdate = async ({
