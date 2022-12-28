@@ -598,8 +598,8 @@ const handleManifest = (txt) => {
     return JSON.stringify(obj, "", 4)
 }
 
-const handleContent_zh = (code) =>
-    replaceLists.map((a) => {
+const handleContent_zh = (code) => (
+    !replaceLists.map((a) => {
         if (!a.matchedNumber || a.matchedNumber === code.match(a.rule)?.length)
             code = code.replace(a.rule, a.replaceWith)
         else
@@ -607,7 +607,8 @@ const handleContent_zh = (code) =>
                 `[${a.rule.toString()}] matched numbers verified error.\nGot ${code.match(a.rule)?.length
                 }, but should be ${a.matchedNumber}.\nskip this rule.`,
             )
-    })
+    }), code
+)
 
 const handleContent = (rawCode) => {
     const ast = parser.parse(rawCode)
