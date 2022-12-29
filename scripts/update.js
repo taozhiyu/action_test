@@ -166,7 +166,8 @@ const doUpdate = async ({
     fileName: path.basename(updateInfo.codebase, '.crx'),
     io,
     hash,
-    zipWrite
+    zipWrite,
+    version: updateInfo.version
   })
   core.info('handle result:')
   console.log(result)
