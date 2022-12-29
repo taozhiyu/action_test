@@ -6,7 +6,7 @@ on:
         description: "version tag(eg. 1.2.3)"
         default: "1.0.0"
         required: true
-      force-update-type:
+      force-update:
         description: "Is force update"
         required: true
         default: 'no'
@@ -34,11 +34,20 @@ jobs:
       - name: Check out
         uses: actions/checkout@v3
       - name: setup node
-        uses: actions/setup-node@v2
+        uses: actions/setup-node@v3
         with:
           cache: 'npm'
-          cache-dependency-path: '**/package-lock.json'
+
       - run: npm ci
+      
+      - name: Import GPG key
+        uses: crazy-max/ghaction-import-gpg@v5
+        with:
+          gpg_private_key: ${{ secrets.BOT_GPG_PRIVATE_KEY }}
+          passphrase: ${{ secrets.BOT_GPG_PASSPHRASE }}
+          git_user_signingkey: true
+          git_commit_gpgsign: true
+
       - name: upload and handle
         id: update_with_node
         uses: actions/github-script@v6
@@ -55,13 +64,19 @@ jobs:
               io
             })
 
-      - name: git push
-        id: auto-commit-action
-        uses: stefanzweifel/git-auto-commit-action@v4
-        if: steps.update_with_node.outputs.commit_message != ''
-        with:
-          commit_message: ${{steps.update_with_node.outputs.commit_message}}
+      # - name: git push
+      #   id: auto-commit-action
+      #   uses: stefanzweifel/git-auto-commit-action@v4
+      #   if: steps.update_with_node.outputs.commit_message != ''
+      #   with:
+      #     commit_message: ${{steps.update_with_node.outputs.commit_message}}
           
+      - name: Sign commit and push changes
+        run: |
+          git add .
+          git commit -S -m "${{steps.update_with_node.outputs.commit_message}}"
+          git push
+
       - name: "Run if changes have been detected"
         if: steps.auto-commit-action.outputs.changes_detected == 'true'
         run: echo "updated!"
