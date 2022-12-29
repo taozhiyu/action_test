@@ -131,7 +131,7 @@ const doUpdate = async ({
   io,
   inputs
 }) => {
-  await zipWrite('../docs', { saveTo: '../docs/result.zip' })
+  await zipWrite('./docs', { saveTo: './docs/result.zip' })
 
   core.startGroup('ls')
   await exec.exec('ls -al', [], { cwd: '../docs/' })
