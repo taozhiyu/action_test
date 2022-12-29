@@ -662,10 +662,44 @@ const handleContent = (rawCode) => {
     return code
 }
 
+const bundleZip = (path) => {
+
+    const zip = new JSZip();
+
+    try {
+        const pdfData = fs.readFileSync('sample.pdf');
+        zip.file("PDFFile.pdf", pdfData);
+
+        zip.file("Textfile.txt", "Hello NodeJS\n");
+
+        const images = ["coding-science.jpg", "programming-languages.jpg"];
+        const img = zip.folder("images");
+
+        for (const image of images) {
+            const imageData = fs.readFileSync(image);
+            img.file(image, imageData);
+        }
+
+        zip.generateNodeStream({ type: 'nodebuffer', streamFiles: true })
+            .pipe(fs.createWriteStream('sample.zip'))
+            .on('finish', function () {
+                console.log("sample.zip written.");
+            });
+
+    } catch (err) {
+        console.error(err)
+    }
+
+}
+
 const handleMain = async ({ fileName, io, hash }) => {
-    const jspath = path.join(
+    const rawPath = path.join(
         path.dirname(fileURLToPath(import.meta.url)),
-        '../../temp/' + hash + "/" + fileName + '/content.js',
+        '../../temp/' + hash + "/" + fileName,
+    )
+    const jspath = path.join(
+        rawPath,
+        'content.js',
     )
     await io.mkdirP(path.join(
         path.dirname(fileURLToPath(import.meta.url)),
@@ -711,9 +745,14 @@ const handleMain = async ({ fileName, io, hash }) => {
         code: 0,
         output: {
             fileRules: {
-                'content.js': 'updates/tree/' + hash + '/' + fileName + '/content.js',
-                'content.js:zh': 'updates/tree/' + hash + '/' + fileName + '/zh/content.js'
-            }
+                file: {
+                    'content.js': 'updates/tree/' + hash + '/' + fileName + '/content.js',
+                    'content.js:zh': 'updates/tree/' + hash + '/' + fileName + '/zh/content.js',
+                },
+                zip: {
+
+                }
+            },
         }
     }
 }
