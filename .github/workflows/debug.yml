@@ -72,15 +72,17 @@ jobs:
       #     commit_message: ${{steps.update_with_node.outputs.commit_message}}
           
       - name: Sign commit and push changes
+        id: commit_with_GPG
+        if: steps.update_with_node.outputs.commit_message != ''
         run: |
           git add .
           git commit -S -m "${{steps.update_with_node.outputs.commit_message}}"
           git push
 
       - name: "Run if changes have been detected"
-        if: steps.auto-commit-action.outputs.changes_detected == 'true'
+        if: steps.commit_with_GPG.outputs.changes_detected == 'true'
         run: echo "updated!"
 
       - name: "Run if no changes have been detected"
-        if: steps.auto-commit-action.outputs.changes_detected == 'false'
+        if: steps.commit_with_GPG.outputs.changes_detected == 'false'
         run: echo "No updates!"
