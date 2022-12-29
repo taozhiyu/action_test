@@ -134,7 +134,9 @@ const doUpdate = async ({
 
   const forceVersion = core.getInput('force-version')
   const forceUpdate = core.getInput('force-update')
-
+  console.log(forceVersion)
+  core.setOutput('commit_message', '');
+  return
   // 获取最新version
   const config = JSON.parse(readFileSync(configPath, 'utf-8'))
   core.debug(config)
