@@ -15,12 +15,11 @@
   "type": "module",
   "dependencies": {
     "ansi-styles": "^6.2.1",
+    "async": "^3.2.4",
     "jszip": "^3.10.1",
-    "libsodium-wrappers": "^0.7.10",
     "xml-js": "^1.6.11"
   },
   "devDependencies": {
-    "@babel/core": "^7.20.2",
-    "@types/libsodium-wrappers": "^0.7.10"
+    "@babel/core": "^7.20.2"
   }
 }
