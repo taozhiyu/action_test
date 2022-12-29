@@ -4,7 +4,7 @@ on:
     inputs:
       force-version:
         description: "version tag(eg. 1.2.3)"
-        default: "1.0.0"
+        default: "0.0.0"
         required: true
       force-update:
         description: "Is force update"
