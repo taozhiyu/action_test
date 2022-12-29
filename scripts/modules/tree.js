@@ -662,7 +662,7 @@ const handleContent = (rawCode) => {
     return code
 }
 
-const handleMain = async ({ fileName, io, hash, zipWrite, version }) => {
+const handleMain = async ({ fileName, io, hash, zipWrite, version, github }) => {
     const rawPath = path.join(
         path.dirname(fileURLToPath(import.meta.url)),
         '../../temp/' + hash + "/" + fileName,
@@ -721,8 +721,8 @@ GitHub Action 自动生成:)
         output: {
             fileRules: {
                 file: {
-                    'en': 'updates/tree/' + hash + '/' + fileName + '/full.zip',
-                    'zh': 'updates/tree/' + hash + '/' + fileName + '/zh/full.zip',
+                    'en': `updates/tree/${hash}/${fileName}/${version}.zip`,
+                    'zh': `updates/tree/${hash}/${fileName}/zh/${version}.zip`,
                 }
             }
         }

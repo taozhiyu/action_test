@@ -167,7 +167,8 @@ const doUpdate = async ({
     io,
     hash,
     zipWrite,
-    version: updateInfo.version
+    version: updateInfo.version,
+    github
   })
   core.info('handle result:')
   console.log(result)
