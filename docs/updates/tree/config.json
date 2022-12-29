@@ -2,10 +2,5 @@
     "latestVersion": "1.0.0",
     "updateDate": "Thu, 29 Dec 2022 00:45:58 GMT",
     "fileRules": {
-        "file": {
-            "content.js": "updates/tree/gf1j6rtqle8/extension_7_7_1_0/content.js",
-            "content.js:zh": "updates/tree/gf1j6rtqle8/extension_7_7_1_0/zh/content.js"
-        },
-        "zip": {}
     }
 }

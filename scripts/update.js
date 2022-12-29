@@ -6,7 +6,7 @@ import { xml2js } from 'xml-js'
 import { colorNames, modifierNames } from 'ansi-styles'
 import styles from 'ansi-styles'
 
-import { zipWrite, zipBuffer } from './zip.js'
+import { zipWrite } from './zip.js'
 
 
 Object.defineProperty(globalThis, 'random', { get: () => Math.random().toString(36).slice(2) })
@@ -131,14 +131,6 @@ const doUpdate = async ({
   io,
   inputs
 }) => {
-  await zipWrite('./docs', { saveTo: './docs/result.zip' })
-
-  core.startGroup('ls')
-  await exec.exec('ls -al', [], { cwd: './docs/' })
-  console.log('ls'.colorful('yellow') + " " + 'finished'.colorful('green'))
-
-  core.setOutput('commit_message', 'test');
-  return
   const configPath = path.join(
     path.dirname(fileURLToPath(import.meta.url)),
     '../docs/updates/' + type + '/config.json',
@@ -173,7 +165,8 @@ const doUpdate = async ({
   const result = await handleMain({
     fileName: path.basename(updateInfo.codebase, '.crx'),
     io,
-    hash
+    hash,
+    zipWrite
   })
   core.info('handle result:')
   console.log(result)

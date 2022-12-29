@@ -662,49 +662,17 @@ const handleContent = (rawCode) => {
     return code
 }
 
-const bundleZip = (path) => {
-
-    const zip = new JSZip();
-
-    try {
-        const pdfData = fs.readFileSync('sample.pdf');
-        zip.file("PDFFile.pdf", pdfData);
-
-        zip.file("Textfile.txt", "Hello NodeJS\n");
-
-        const images = ["coding-science.jpg", "programming-languages.jpg"];
-        const img = zip.folder("images");
-
-        for (const image of images) {
-            const imageData = fs.readFileSync(image);
-            img.file(image, imageData);
-        }
-
-        zip.generateNodeStream({ type: 'nodebuffer', streamFiles: true })
-            .pipe(fs.createWriteStream('sample.zip'))
-            .on('finish', function () {
-                console.log("sample.zip written.");
-            });
-
-    } catch (err) {
-        console.error(err)
-    }
-
-}
-
 const handleMain = async ({ fileName, io, hash }) => {
     const rawPath = path.join(
         path.dirname(fileURLToPath(import.meta.url)),
         '../../temp/' + hash + "/" + fileName,
     )
-    const jspath = path.join(
-        rawPath,
-        'content.js',
-    )
-    await io.mkdirP(path.join(
+    const targetPath = path.join(
         path.dirname(fileURLToPath(import.meta.url)),
-        `../../docs/updates/tree/${hash}/${fileName}/zh/`
-    ));
+        `../../docs/updates/tree/${hash}/${fileName}`
+    )
+    const jspath = path.join(rawPath, 'content.js')
+    await io.mkdirP(path.join(targetPath,'zh'));
     let code = ""
     try {
         const rawCode = fs.readFileSync(jspath, 'utf-8')
@@ -712,47 +680,46 @@ const handleMain = async ({ fileName, io, hash }) => {
     } catch (e) {
         return { code: -1, message: e || 'handle content error' }
     }
-    fs.writeFileSync(
-        path.join(
-            path.dirname(fileURLToPath(import.meta.url)),
-            '../../docs/updates/tree/' + hash + '/' + fileName + '/content.js',
-        ),
-        code
-    )
+    fs.writeFileSync(path.join(targetPath, 'content.js'), code)
+    fs.writeFileSync(jspath, code)
+
+    try {
+        await zipWrite(`./temp/${hash}/${fileName}`, { saveTo: `./docs/updates/tree/${hash}/${fileName}/full.zip` })
+    } catch (e) {
+        return { code: -1, message: e || 'zip save failed' }
+    }
+
     let zhCode = ""
     try {
         zhCode = handleContent_zh(code)
     } catch (e) {
         return { code: -1, message: e || 'handle content to zh error' }
     }
-    fs.writeFileSync(
-        path.join(
-            path.dirname(fileURLToPath(import.meta.url)),
-            '../../docs/updates/tree/' + hash + '/' + fileName + '/zh/content.js',
-        ),
-        zhCode
-    )
-
-
+    fs.writeFileSync(jspath, zhCode)
     try {
-        const rawManifest = fs.readFileSync(path.join(path.dirname(jspath), './manifest.json'), 'utf-8')
-
-        const manifest = handleManifest(rawManifest)
+        await zipWrite(`./temp/${hash}/${fileName}`, { saveTo: `./docs/updates/tree/${hash}/${fileName}/zh/full.zip` })
     } catch (e) {
-        return { code: -1, message: e || 'handle manifest file error' }
+        return { code: -1, message: e || 'zip save failed' }
     }
+    fs.writeFileSync(path.join(targetPath, 'zh','content.js'), zhCode)
+
+    // try {
+    //     const rawManifest = fs.readFileSync(path.join(path.dirname(jspath), './manifest.json'), 'utf-8')
+
+    //     const manifest = handleManifest(rawManifest)
+    // } catch (e) {
+    //     return { code: -1, message: e || 'handle manifest file error' }
+    // }
+
     return {
         code: 0,
         output: {
             fileRules: {
                 file: {
-                    'content.js': 'updates/tree/' + hash + '/' + fileName + '/content.js',
-                    'content.js:zh': 'updates/tree/' + hash + '/' + fileName + '/zh/content.js',
-                },
-                zip: {
-
+                    'en': 'updates/tree/' + hash + '/' + fileName + '/full.zip',
+                    'zh': 'updates/tree/' + hash + '/' + fileName + '/zh/full.zip',
                 }
-            },
+            }
         }
     }
 }
