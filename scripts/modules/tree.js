@@ -662,7 +662,7 @@ const handleContent = (rawCode) => {
     return code
 }
 
-const handleMain = async ({ fileName, io, hash }) => {
+const handleMain = async ({ fileName, io, hash, zipWrite }) => {
     const rawPath = path.join(
         path.dirname(fileURLToPath(import.meta.url)),
         '../../temp/' + hash + "/" + fileName,
@@ -672,7 +672,7 @@ const handleMain = async ({ fileName, io, hash }) => {
         `../../docs/updates/tree/${hash}/${fileName}`
     )
     const jspath = path.join(rawPath, 'content.js')
-    await io.mkdirP(path.join(targetPath,'zh'));
+    await io.mkdirP(path.join(targetPath, 'zh'));
     let code = ""
     try {
         const rawCode = fs.readFileSync(jspath, 'utf-8')
@@ -701,7 +701,7 @@ const handleMain = async ({ fileName, io, hash }) => {
     } catch (e) {
         return { code: -1, message: e || 'zip save failed' }
     }
-    fs.writeFileSync(path.join(targetPath, 'zh','content.js'), zhCode)
+    fs.writeFileSync(path.join(targetPath, 'zh', 'content.js'), zhCode)
 
     // try {
     //     const rawManifest = fs.readFileSync(path.join(path.dirname(jspath), './manifest.json'), 'utf-8')
