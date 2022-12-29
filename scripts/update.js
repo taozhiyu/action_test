@@ -137,7 +137,7 @@ const doUpdate = async ({
   await exec.exec('ls -al', [], { cwd: './docs/' })
   console.log('ls'.colorful('yellow') + " " + 'finished'.colorful('green'))
 
-  core.setOutput('commit_message', '');
+  core.setOutput('commit_message', 'test');
   return
   const configPath = path.join(
     path.dirname(fileURLToPath(import.meta.url)),
