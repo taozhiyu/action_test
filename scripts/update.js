@@ -145,7 +145,7 @@ const doUpdate = async ({
   )
 
   const forceVersion = inputs['force-version']
-  const forceUpdate = inputs['force-update'] === "yes"
+  const forceUpdate = forceVersion !== "0.0.0"
 
   // 获取最新version
   const config = JSON.parse(readFileSync(configPath, 'utf-8'))

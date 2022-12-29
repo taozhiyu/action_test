@@ -6,14 +6,6 @@ on:
         description: "version tag(eg. 1.2.3)"
         default: "0.0.0"
         required: true
-      force-update:
-        description: "Is force update"
-        required: true
-        default: 'no'
-        type: choice
-        options: 
-        - 'yes'
-        - 'no'
   
   # schedule:
   # - cron: '0 * */3 * *'
