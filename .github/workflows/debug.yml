@@ -53,6 +53,7 @@ jobs:
         uses: actions/github-script@v6
         with:
           script: |
+            const inputs = ${{ toJSON(inputs) }};
             const { default: script } = await import('${{ github.workspace }}/scripts/update.js')
             await script({
               github,
@@ -61,7 +62,8 @@ jobs:
               exec,
               type:'${{secrets.TYPE}}',
               id:'${{secrets.ID}}',
-              io
+              io,
+              inputs
             })
 
       # - name: git push

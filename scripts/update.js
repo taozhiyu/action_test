@@ -125,19 +125,15 @@ const doUpdate = async ({
   type,
   id,
   exec,
-  io
+  io,
+  inputs
 }) => {
   const configPath = path.join(
     path.dirname(fileURLToPath(import.meta.url)),
     '../docs/updates/' + type + '/config.json',
   )
 
-  const forceVersion = core.getInput('force-version', { required: true })
-  const forceUpdate = core.getInput('force-update', { required: true })
-  console.log(111111111111111111111)
-  console.log('1', forceVersion)
-  console.log('12', forceUpdate)
-  console.log(2222222222222222222222)
+  console.log(inputs)
   core.setOutput('commit_message', '');
   return
   // 获取最新version
