@@ -133,8 +133,11 @@ const doUpdate = async ({
   )
 
   const forceVersion = core.getInput('force-version')
-  const forceUpdate = core.getInput('force-update')
-  console.log(forceVersion)
+  const forceUpdate = core.getBooleanInput('force-update')
+  console.log(111111111111111111111)
+  console.log('1',forceVersion)
+  console.log('12',forceUpdate)
+  console.log(2222222222222222222222)
   core.setOutput('commit_message', '');
   return
   // 获取最新version
