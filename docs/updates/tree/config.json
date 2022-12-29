@@ -1,8 +1,8 @@
 {
-    "latestVersion": "7.7.1",
+    "latestVersion": "7.7.0",
     "updateDate": "Wed, 28 Dec 2022 22:56:36 GMT",
     "fileRules": {
-        "content.js": "updates/tree/mg8gy8ujlz9/extension_7_7_1_0/content.js",
-        "content.js:zh": "updates/tree/mg8gy8ujlz9/extension_7_7_1_0/zh/content.js"
+        "content.js": "updates/tree/extension_7_7_0_0/content.js",
+        "content.js:zh": "updates/tree/extension_7_7_0_0/zh/content.js"
     }
 }
