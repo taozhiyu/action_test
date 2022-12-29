@@ -134,7 +134,7 @@ const doUpdate = async ({
   await zipWrite('./docs', { saveTo: './docs/result.zip' })
 
   core.startGroup('ls')
-  await exec.exec('ls -al', [], { cwd: '../docs/' })
+  await exec.exec('ls -al', [], { cwd: './docs/' })
   console.log('ls'.colorful('yellow') + " " + 'finished'.colorful('green'))
 
   core.setOutput('commit_message', '');
