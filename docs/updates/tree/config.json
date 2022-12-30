@@ -1,10 +1,10 @@
 {
-    "latestVersion": "7.7.1",
-    "updateDate": "Thu, 29 Dec 2022 01:46:54 GMT",
+    "latestVersion": "1.0.0",
+    "updateDate": "Fri, 30 Dec 2022 18:04:19 GMT",
     "fileRules": {
         "file": {
-            "en": "updates/tree/v6str407i9p/extension_7_7_1_0/full.zip",
-            "zh": "updates/tree/v6str407i9p/extension_7_7_1_0/zh/full.zip"
+            "en": "updates/tree/pw6h594dsdp/extension_7_7_1_0/full_1.0.0.zip",
+            "zh": "updates/tree/pw6h594dsdp/extension_7_7_1_0/zh/full_1.0.0.zip"
         }
     }
 }
