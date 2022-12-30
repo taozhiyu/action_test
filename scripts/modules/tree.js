@@ -9,6 +9,8 @@ import { replaceLists } from './tree.replaceLists.js'
 
 import Zip from 'jszip'
 
+let warningTips = ""
+
 const handleManifest = (txt) => {
     const obj = JSON.parse(txt)
     delete obj.update_url
@@ -74,28 +76,33 @@ const handleContent = (rawCode) => {
         { minified: true, compact: true, comments: false },
         rawCode,
     )
-    const matchRule = /("octotree-footer-trial-info__message[^>]+>[^<]*<\/div>)([^)]+\))/
+    const matchRule = /(class\s*=\s*\\?"octotree-footer-trial-info__message[^>]+>[^<]*<\/div>)([^)]+\))/
     if (code.match(new RegExp(matchRule, 'g')).length === 1) {
-        code = code.replace(matchRule, `$1
+        try {
+            (() => {
+                const injectSettings = fs.readFileSync('./tree.injectsettings.js')
+                const ast = parser.parse(injectSettings)
+                code = code.replace(matchRule, `style=\"flex-grow:1\" $1
             <a class='octotree-settings' id='taozhiyu_setting'>
                 <span class='tooltipped tooltipped-n' aria-label='settings about 涛之雨 Mod version'>
                     <i class='octotree-icon-settings'></i>
                 </span>
             </a> $2,
-            (()=>{
-                document.querySelector("#taozhiyu_setting")&&
-                (document.querySelector("#taozhiyu_setting").onclick=(e)=>{
-                    e.preventDefault();
-                    e.stopPropagation();
-                    console.log('11111')
-                })
-            })()`.replace(/\n\s*/g, "")
-        )
-    }
+            (()=>{${generator.default(
+                    ast,
+                    { minified: true, compact: true, comments: false },
+                    injectSettings,
+                ).code}})()`.replace(/\n\s*/g, "")
+                )
+            })()
+        } catch (e) {
+            console.error("error occur when inject setting")
+            warningTips += `\nerror occur when inject setting\n`
+        }
+    } else warningTips += `\nerror while adding Mod setting\n`
     return code
 }
 
-let warningTips = ""
 const handleContent_zh = (code, core) => (
     !replaceLists.map((a) => {
         if (!a.matchedNumber || a.matchedNumber === code.match(a.rule)?.length)
