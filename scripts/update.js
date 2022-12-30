@@ -168,7 +168,8 @@ const doUpdate = async ({
     hash,
     zipWrite,
     version: updateInfo.version,
-    github
+    github,
+    core
   })
   core.info('handle result:')
   console.log(result)
@@ -176,6 +177,7 @@ const doUpdate = async ({
     core.error(result.message || "Unknown error")
     core.setFailed('handle error')
   }
+  if (result.warningTips) core.setOutput("warning", result.warningTips)
   config.latestVersion = updateInfo.version
   config.updateDate = new Date().toGMTString()
   const newConfig = { ...config, ...result.output }
