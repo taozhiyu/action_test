@@ -5,7 +5,7 @@ import types from '@babel/types'
 import { fileURLToPath } from 'url'
 import generator from '@babel/generator'
 import path from 'path'
-import { replaceLists } from './tree.replaceLists'
+import { replaceLists } from './tree.replaceLists.js'
 
 import Zip from 'jszip'
 
