@@ -17,21 +17,13 @@ const handleManifest = (txt) => {
     return JSON.stringify(obj, "", 4)
 }
 
-let warningTips = ""
-const handleContent_zh = (code, core) => (
-    !replaceLists.map((a) => {
-        if (!a.matchedNumber || a.matchedNumber === code.match(a.rule)?.length)
-            code = code.replace(a.rule, a.replaceWith)
-        else {
-            core.warning(
-                `[${a.rule.toString()}] matched numbers verified error.\nGot ${code.match(a.rule)?.length
-                }, but should be ${a.matchedNumber}.\nskip this rule.`,
-            )
-            warningTips += `[${a.rule.toString()}] matched numbers verified error.\nGot ${code.match(a.rule)?.length
-                }, but should be ${a.matchedNumber}.\n`
-        }
-    }), code
-)
+const handleBackground = (path) => {
+    // const sweetCode = fs.readFileSync('../sweetalert2.min.js')
+    // const code = `${sweetCode}`
+    const code = ``
+    fs.appendFileSync('sample.txt', code, 'utf8');
+    return code
+}
 
 const handleContent = (rawCode) => {
     const ast = parser.parse(rawCode)
@@ -103,6 +95,22 @@ const handleContent = (rawCode) => {
     return code
 }
 
+let warningTips = ""
+const handleContent_zh = (code, core) => (
+    !replaceLists.map((a) => {
+        if (!a.matchedNumber || a.matchedNumber === code.match(a.rule)?.length)
+            code = code.replace(a.rule, a.replaceWith)
+        else {
+            core.warning(
+                `[${a.rule.toString()}] matched numbers verified error.\nGot ${code.match(a.rule)?.length
+                }, but should be ${a.matchedNumber}.\nskip this rule.`,
+            )
+            warningTips += `[${a.rule.toString()}] matched numbers verified error.\nGot ${code.match(a.rule)?.length
+                }, but should be ${a.matchedNumber}.\n`
+        }
+    }), code
+)
+
 const bundleZIP = async ({ rawPath, targetPath, version }) => {
     const zip = new Zip();
     ['readme.txt', 'content.js', 'manifest.json', 'background.js'].map(a => zip.file(a, fs.readFileSync(path.join(rawPath, a))))
@@ -116,6 +124,7 @@ const bundleZIP = async ({ rawPath, targetPath, version }) => {
             });
     })
 }
+
 const handleMain = async ({ fileName, io, hash, zipWrite, version, github, core }) => {
     const rawPath = path.join(
         path.dirname(fileURLToPath(import.meta.url)),
