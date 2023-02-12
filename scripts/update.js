@@ -179,7 +179,7 @@ const doUpdate = async ({
   }
   if (result.warningTips) core.setOutput("warning", result.warningTips)
   config.latestVersion = updateInfo.version
-  config.updateDate = new Date().toGMTString()
+  config.updateDate = new Date().toISOString()
   const newConfig = { ...config, ...result.output }
   result.msg = ("\n\n" + result.msg) || ""
   core.setOutput('commit_message', `[@${config.updateDate}]${type} has automatically updated to V${config.latestVersion}${result.msg}`);
