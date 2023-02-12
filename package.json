@@ -17,6 +17,7 @@
     "ansi-styles": "^6.2.1",
     "async": "^3.2.4",
     "jszip": "^3.10.1",
+    "puppeteer": "^19.6.3",
     "xml-js": "^1.6.11"
   },
   "devDependencies": {

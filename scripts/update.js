@@ -160,7 +160,7 @@ const doUpdate = async ({
 
   //const hash = random//'.'
 
-  const { default: handleMain } = await import('./modules/' + type + '.js')
+  const { default: handleMain } = await import('./modules/' + type)
   // try {
   const result = await handleMain({
     fileName: path.basename(updateInfo.codebase, '.crx'),
@@ -181,7 +181,8 @@ const doUpdate = async ({
   config.latestVersion = updateInfo.version
   config.updateDate = new Date().toGMTString()
   const newConfig = { ...config, ...result.output }
-  core.setOutput('commit_message', `[@${config.updateDate}]${type} has automatically updated to V${config.latestVersion}`);
+  result.msg = ("\n\n" + result.msg) || ""
+  core.setOutput('commit_message', `[@${config.updateDate}]${type} has automatically updated to V${config.latestVersion}${result.msg}`);
   writeFileSync(configPath, JSON.stringify(newConfig, "", 4))
   // } catch (error) {
   //   core.error(error)
