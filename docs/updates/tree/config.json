@@ -1,10 +1,10 @@
 {
-    "latestVersion": "1.0.0",
-    "updateDate": "Fri, 30 Dec 2022 18:04:19 GMT",
+    "latestVersion": "7.7.1",
+    "updateDate": "Sun, 12 Feb 2023 23:27:41 GMT",
     "fileRules": {
         "file": {
-            "en": "updates/tree/pw6h594dsdp/extension_7_7_1_0/full_1.0.0.zip",
-            "zh": "updates/tree/pw6h594dsdp/extension_7_7_1_0/zh/full_1.0.0.zip"
+            "en": "updates/tree/extension_7_7_1_0/full_gnpuht4unxl.zip",
+            "zh": "updates/tree/extension_7_7_1_0/full_gnpuht4unxl.zh.zip"
         }
     }
 }
