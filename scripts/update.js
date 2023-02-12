@@ -160,7 +160,7 @@ const doUpdate = async ({
 
   //const hash = random//'.'
 
-  const { default: handleMain } = await import('./modules/' + type)
+  const { default: handleMain } = await import('./modules/' + type + '/index.js')
   // try {
   const result = await handleMain({
     fileName: path.basename(updateInfo.codebase, '.crx'),
