@@ -181,8 +181,8 @@ const doUpdate = async ({
   config.latestVersion = updateInfo.version
   config.updateDate = new Date().toISOString()
   const newConfig = { ...config, ...result.output }
-  result.msg = ("\n\n" + result.msg) || ""
-  core.setOutput('commit_message', `[@${config.updateDate}]${type} has automatically updated to V${config.latestVersion}${result.msg}`);
+  result.msg = "\n\n" + (result.msg || "")
+  core.setOutput('commit_message', `[${config.updateDate}]${type} has automatically updated to V${config.latestVersion}${result.msg}`);
   writeFileSync(configPath, JSON.stringify(newConfig, "", 4))
   // } catch (error) {
   //   core.error(error)

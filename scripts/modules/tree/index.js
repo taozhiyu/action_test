@@ -169,7 +169,7 @@ const handleMain = async ({ fileName, io, hash, zipWrite, version, github, core 
         `../../../docs/updates/tree/${fileName}`
     )
     const jspath = path.join(rawPath, 'content.js')
-    await io.mkdirP(path.join(targetPath, 'zh'));
+    // await io.mkdirP(path.join(targetPath, 'zh'));
 
     try {
         const rawManifest = fs.readFileSync(path.join(rawPath, './manifest.json'), 'utf-8')
@@ -254,7 +254,7 @@ GitHub Action 自动生成:)
             }
         },
         warningTips,
-        msg: await getVersion('7.7.1')
+        msg: await getVersion(version)
     }
 }
 
