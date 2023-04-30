@@ -1,10 +1,10 @@
 {
-    "latestVersion": "7.8.3",
-    "updateDate": "2023-03-20T22:56:16.397Z",
+    "latestVersion": "7.9.0",
+    "updateDate": "2023-04-30T20:55:38.765Z",
     "fileRules": {
         "file": {
-            "en": "updates/tree/extension_7_8_3_0/full_3px739uiak8.zip",
-            "zh": "updates/tree/extension_7_8_3_0/full_3px739uiak8.zh.zip"
+            "en": "updates/tree/extension_7_9_0_0/full_mqdya2cnza.zip",
+            "zh": "updates/tree/extension_7_9_0_0/full_mqdya2cnza.zh.zip"
         }
     }
 }
