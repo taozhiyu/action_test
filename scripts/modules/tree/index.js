@@ -169,7 +169,7 @@ const handleMain = async ({ fileName, io, hash, zipWrite, version, github, core 
         `../../../docs/updates/tree/${fileName}`
     )
     const jspath = path.join(rawPath, 'content.js')
-    // await io.mkdirP(path.join(targetPath, 'zh'));
+    await io.mkdirP(targetPath);
 
     try {
         const rawManifest = fs.readFileSync(path.join(rawPath, './manifest.json'), 'utf-8')
