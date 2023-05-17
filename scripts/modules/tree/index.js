@@ -15,16 +15,17 @@ let warningTips = ""
 const handleManifest = (txt) => {
     const obj = JSON.parse(txt)
     delete obj.update_url
+    obj.name = "Octotree Pro"
     if (obj.manifest_version !== 2) throw 'manifest_version updated!'
     if (!obj.permissions.includes("notifications")) obj.permissions.push("notifications")
     return JSON.stringify(obj, "", 4)
 }
 
-const handleBackground = (path) => {
+const handleBackground = (data) => {
     // const sweetCode = fs.readFileSync('../sweetalert2.min.js')
     // const code = `${sweetCode}`
-    const code = ``
-    fs.appendFileSync('sample.txt', code, 'utf8');
+    const code = data
+    // fs.appendFileSync('sample.txt', code, 'utf8');
     return code
 }
 
@@ -80,22 +81,20 @@ const handleContent = (rawCode) => {
     const matchRule = /(class\s*=\s*\\?"octotree-footer-trial-info__message[^>]+>[^<]*<\/div>)([^)]+\))/
     if (code.match(new RegExp(matchRule, 'g')).length === 1) {
         try {
-            (() => {
-                const injectSettings = fs.readFileSync('./tree.injectsettings.js')
-                const ast = parser.parse(injectSettings)
-                code = code.replace(matchRule, `style=\"flex-grow:1\" $1
+            const injectSettings = fs.readFileSync('./tree.injectsettings.js')
+            const ast = parser.parse(injectSettings)
+            code = code.replace(matchRule, `style=\"flex-grow:1\" $1
             <a class='octotree-settings' id='taozhiyu_setting'>
                 <span class='tooltipped tooltipped-n' aria-label='settings about 涛之雨 Mod version'>
                     <i class='octotree-icon-settings'></i>
                 </span>
             </a> $2,
             (()=>{${generator.default(
-                    ast,
-                    { minified: true, compact: true, comments: false },
-                    injectSettings,
-                ).code}})()`.replace(/\n\s*/g, "")
-                )
-            })()
+                ast,
+                { minified: true, compact: true, comments: false },
+                injectSettings,
+            ).code}})()`.replace(/\n\s*/g, "")
+            )
         } catch (e) {
             console.error("error occur when inject setting")
             warningTips += `\nerror occur when inject setting\n`
@@ -180,7 +179,7 @@ const handleMain = async ({ fileName, io, hash, zipWrite, version, github, core 
     }
 
 
-    const bCode = handleBackground(github, fs.readFileSync(path.join(rawPath, 'background.js'), 'utf-8'))
+    const bCode = handleBackground(fs.readFileSync(path.join(rawPath, 'background.js'), 'utf-8'))
     // fs.writeFileSync(path.join(targetPath, 'background.js'), bCode)
     fs.writeFileSync(path.join(rawPath, 'background.js'), bCode)
 
@@ -226,7 +225,7 @@ Unzip and overwrite.`)
         fs.writeFileSync(path.join(rawPath, 'readme.txt'), `By: 涛之雨@吾爱破解
 GitHub Action 自动生成:)
 别再传播了，球球了`)
-        await zipWrite(`./temp/${hash}/${fileName}`, { saveTo: `./docs/updates/tree/${fileName}/full_${hash}.zip` })
+        await zipWrite(`./temp/${hash}/${fileName}`, { saveTo: `./docs/updates/tree/${fileName}/full_${hash}.zh.zip` })
     } catch (e) {
         return { code: -1, message: e || 'zip save failed' }
     }

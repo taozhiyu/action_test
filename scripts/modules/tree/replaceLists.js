@@ -586,4 +586,9 @@ export const replaceLists = [
         replaceWith: '涛之雨修改设置',
         matchedNumber: 1,
     },
+    {
+        rule:/just demo version, haven't finished/,
+        replaceWith: '演示版，尚未完成',
+        matchedNumber: 1,
+    }
 ]
