@@ -1,10 +1,10 @@
 {
-    "latestVersion": "1",
-    "updateDate": "2023-05-18T11:16:31.948Z",
+    "latestVersion": "7.9.3",
+    "updateDate": "2023-07-21T02:45:10.129Z",
     "fileRules": {
         "file": {
-            "en": "updates/tree/extension_7_9_0_0/full_8xvv9ozuji.zip",
-            "zh": "updates/tree/extension_7_9_0_0/full_8xvv9ozuji.zh.zip"
+            "en": "updates/tree/extension_7_9_3_0/full_i62jla984w9.zip",
+            "zh": "updates/tree/extension_7_9_3_0/full_i62jla984w9.zh.zip"
         }
     }
 }
