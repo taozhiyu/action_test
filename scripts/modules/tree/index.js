@@ -16,7 +16,7 @@ const handleManifest = (txt) => {
     const obj = JSON.parse(txt)
     delete obj.update_url
     obj.name = "Octotree Pro"
-    if (obj.manifest_version !== 2) throw 'manifest_version updated!'
+    if (obj.manifest_version !== 3) throw 'manifest_version not match!!'
     if (!obj.permissions.includes("notifications")) obj.permissions.push("notifications")
     return JSON.stringify(obj, "", 4)
 }
