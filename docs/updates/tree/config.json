@@ -1,10 +1,10 @@
 {
-    "latestVersion": "7.11.2",
-    "updateDate": "2024-03-04T13:46:46.480Z",
+    "latestVersion": "8.0.1",
+    "updateDate": "2024-10-14T08:49:45.514Z",
     "fileRules": {
         "file": {
-            "en": "updates/tree/BKHAAGJAHFMJLJALOPJNOEALNFNDNAGC_7_11_2_0/full_tgcsfgqpuy.zip",
-            "zh": "updates/tree/BKHAAGJAHFMJLJALOPJNOEALNFNDNAGC_7_11_2_0/full_tgcsfgqpuy.zh.zip"
+            "en": "updates/tree/BKHAAGJAHFMJLJALOPJNOEALNFNDNAGC_8_0_1_0/full_6njkp4btu3o.zip",
+            "zh": "updates/tree/BKHAAGJAHFMJLJALOPJNOEALNFNDNAGC_8_0_1_0/full_6njkp4btu3o.zh.zip"
         }
     }
 }
